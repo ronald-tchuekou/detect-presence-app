@@ -1,10 +1,10 @@
 const COLORS = {
    // Application colors
-   PRIMARY: '#FF3E79',
-   PRIMARY_75: 'rgba(255,62,121,0.75)',
-   PRIMARY_50: 'rgba(255,62,121,0.50)',
-   PRIMARY_25: 'rgba(255,62,121,0.25)',
-   PRIMARY_15: 'rgba(255,62,121,0.15)',
+   PRIMARY: '#0073c5',
+   PRIMARY_75: 'rgba(0,115,191,0.75)',
+   PRIMARY_50: 'rgba(0,115,191,0.50)',
+   PRIMARY_25: 'rgba(0,115,191,0.25)',
+   PRIMARY_15: 'rgba(0,115,191,0.15)',
    SECOND: '#FFB156',
    SECOND_75: 'rgba(255,177,86,0.75)',
    SECOND_50: 'rgba(255,177,86,0.50)',

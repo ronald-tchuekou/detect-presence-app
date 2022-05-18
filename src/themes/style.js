@@ -7,7 +7,7 @@ const STYLES = StyleSheet.create({
       backgroundColor: COLORS.WHITE,
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
    },
    title: {
       fontSize: SIZES.H5,
@@ -21,30 +21,30 @@ const STYLES = StyleSheet.create({
    },
    default_text: {
       fontSize: SIZES.H7,
-      fontWeight: "300",
-      color: COLORS.DARK_300,
+      fontWeight: '300',
+      color: COLORS.DARK_300
    },
    text: {
       fontSize: SIZES.H7,
-      fontWeight: "300",
+      fontWeight: '300',
       color: COLORS.DARK_300,
       marginBottom: SIZES.DEFAULT_MARGIN
    },
    text_m: {
       fontSize: SIZES.H5,
       fontWeight: '600',
-      color: COLORS.DARK_500,
+      color: COLORS.DARK_500
    },
    text_center: {
-      textAlign: 'center',
+      textAlign: 'center'
    },
    default_padding: {
-      padding: SIZES.DEFAULT_PADDING,
+      padding: SIZES.DEFAULT_PADDING
    },
    pagination: {
       display: 'flex',
       flexDirection: 'row',
-      paddingVertical: SIZES.MEDIUM_PADDING,
+      paddingVertical: SIZES.MEDIUM_PADDING
    },
    button_primary: {
       borderWidth: 1,
@@ -52,7 +52,7 @@ const STYLES = StyleSheet.create({
       backgroundColor: COLORS.PRIMARY,
       paddingVertical: SIZES.SMALL_PADDING,
       paddingHorizontal: SIZES.DEFAULT_PADDING,
-      borderRadius: 10,
+      borderRadius: 10
    },
    button_primary_outline: {
       borderWidth: 1,
@@ -60,7 +60,7 @@ const STYLES = StyleSheet.create({
       backgroundColor: COLORS.WHITE,
       paddingVertical: SIZES.SMALL_PADDING,
       paddingHorizontal: SIZES.DEFAULT_PADDING,
-      borderRadius: 10,
+      borderRadius: 10
    },
    icon: {
       width: 30,
@@ -93,7 +93,7 @@ const STYLES = StyleSheet.create({
    },
    text_sm: {
       fontSize: 12,
-      color: COLORS.DARK_300,
+      color: COLORS.DARK_300
    }
 })
 

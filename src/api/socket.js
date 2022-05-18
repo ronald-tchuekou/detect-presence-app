@@ -4,6 +4,6 @@
  * @email ronaldtchuekou@gmail.com
  */
 
-import {io} from "socket.io-client"
+import { io } from 'socket.io-client'
 
-export const socket = io("https://api.bigoodee.com")
+export const socket = io('https://api.bigoodee.com')
