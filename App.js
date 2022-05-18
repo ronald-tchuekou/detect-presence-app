@@ -2,13 +2,13 @@ import React from 'react'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import AuthFlow from './src/navigations/auth-flow'
 import { Provider as AuthProvider } from './src/contexts/authContext'
-import AgentFlow from './src/navigations/agent-flow'
-import TeacherFlow from './src/navigations/teacher-flow'
+import PersonnelFlow from './src/navigations/personnel-flow'
+import EnseignantFlow from './src/navigations/enseignant-flow'
 
 const baseNavigator = createSwitchNavigator({
    AuthFlow: AuthFlow,
-   AgentFlow: AgentFlow,
-   TeacherFlow: TeacherFlow
+   PersonnelFlow: PersonnelFlow,
+   EnseignantFlow: EnseignantFlow
 })
 
 const App = createAppContainer(baseNavigator)

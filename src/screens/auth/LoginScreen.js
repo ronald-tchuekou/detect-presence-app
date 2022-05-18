@@ -14,4 +14,4 @@ const LoginScreen = ({}) => {
    )
 }
 
-export { LoginScreen }
+export default LoginScreen

@@ -8,7 +8,7 @@ import createDataContext from './createDataContext'
 import detectPresenceApi from '../api/detect-presence-api'
 import API_ROUTES from '../api/api_routes'
 import { ENV } from '../api/env'
-import { storeLocalValue } from '../utils'
+import { storeLocaleValue } from '../utils'
 
 const reducer = (state, action) => {
    switch (action.type) {
@@ -28,7 +28,7 @@ const signIn = (dispatch) => {
    return async (data, callback) => {
       try {
          const response = await detectPresenceApi.post(API_ROUTES.SIGNING, data)
-         await storeLocalValue(ENV.user_key, response.data, (error, value) => {
+         await storeLocaleValue(ENV.user_key, response.data, (error, value) => {
             dispatch({ type: 'set_current_user', payload: response.data })
             dispatch({ type: 'set_current_user_token', payload: response.data.accessToken })
             callback(undefined, value)
@@ -41,7 +41,7 @@ const signIn = (dispatch) => {
 
 const signOut = (dispatch) => {
    return async (callback) => {
-      await storeLocalValue(ENV.user_key, null, (error, value) => {
+      await storeLocaleValue(ENV.user_key, null, (error, value) => {
          dispatch({ type: 'set_current_user', payload: null })
          dispatch({ type: 'set_current_user_token', payload: null })
          callback(undefined, value)
@@ -66,7 +66,7 @@ const resetUserPassword = (dispatch) => {
       try {
          const user = await detectPresenceApi.post(API_ROUTES.RESET_USER_PASSWORD, data)
          const response = await detectPresenceApi.post(API_ROUTES.SIGNING, user.data)
-         await storeLocalValue(ENV.user_key, response.data, (error, value) => {
+         await storeLocaleValue(ENV.user_key, response.data, (error, value) => {
             dispatch({ type: 'set_current_user', payload: response.data })
             dispatch({ type: 'set_current_user_token', payload: response.data.accessToken })
             callback(undefined, value)

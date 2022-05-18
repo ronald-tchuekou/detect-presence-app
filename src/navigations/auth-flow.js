@@ -4,7 +4,7 @@ import { LoginScreen } from '../screens'
 const AuthFlow = createStackNavigator({
    LoginScreen: LoginScreen
 }, {
-   initialRouteName: LoginScreen
+   initialRouteName: "LoginScreen"
 })
 
 export default AuthFlow
