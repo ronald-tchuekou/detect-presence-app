@@ -3,9 +3,16 @@
     "name": "detect-presence",
     "slug": "detect-presence",
     "version": "1.0.0",
+    "owner": "ronald-tchuekou",
     "orientation": "portrait",
+    "primaryColor": "#0073c5",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "description": "Application qui permet de gérer la présence du personnel d'un établissement scolaire.",
+    "githubUrl": "https://github.com/ronald-tchuekou/detect-presence-app.git",
+    "developmentClient": {
+      "silentLaunch": false
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
