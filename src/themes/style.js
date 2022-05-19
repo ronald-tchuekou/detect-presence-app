@@ -9,6 +9,13 @@ const STYLES = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center'
    },
+   page_title: {
+      width: '100%',
+      textAlign: 'center',
+      fontSize: SIZES.H3,
+      fontWeight: 'bold',
+      color: COLORS.DARK_500
+   },
    title: {
       fontSize: SIZES.H5,
       fontWeight: 'bold',
@@ -52,7 +59,14 @@ const STYLES = StyleSheet.create({
       backgroundColor: COLORS.PRIMARY,
       paddingVertical: SIZES.SMALL_PADDING,
       paddingHorizontal: SIZES.DEFAULT_PADDING,
-      borderRadius: 10
+      borderRadius: 10,
+      color: COLORS.WHITE,
+      overflow: 'hidden'
+   },
+   button_text_primary: {
+     color: COLORS.WHITE,
+     fontSize: SIZES.H7,
+     textAlign: "center"
    },
    button_primary_outline: {
       borderWidth: 1,
