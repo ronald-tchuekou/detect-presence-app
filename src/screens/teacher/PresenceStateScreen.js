@@ -4,7 +4,7 @@ import SIZES from '../../themes/sizes'
 import { AppStatusBar } from '../../components'
 import COLORS from '../../themes/colors'
 
-const ProgramCourseScreen = ({ navigation }) => {
+const PresenceStateScreen = ({ navigation }) => {
 
    const goTo = path => navigation.navigate(path)
 
@@ -15,14 +15,14 @@ const ProgramCourseScreen = ({ navigation }) => {
                fontSize: SIZES.H3,
                textAlign: 'center',
                padding: SIZES.DEFAULT_PADDING
-            }}>Program course screen</Text>
+            }}>Presence state screen</Text>
          </ScrollView>
       </AppStatusBar>
    )
 }
 
-ProgramCourseScreen.navigationOptions = () => ({
+PresenceStateScreen.navigationOptions = () => ({
    headerShown: false
 })
 
-export default ProgramCourseScreen
+export default PresenceStateScreen
