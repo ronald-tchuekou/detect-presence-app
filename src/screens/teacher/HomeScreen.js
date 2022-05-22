@@ -5,10 +5,18 @@ import { AppStatusBar, Space } from '../../components'
 import COLORS from '../../themes/colors'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { cours_session, financial_state, presence_state, profile2, program_course } from '../../themes/images'
+import { ProfileModal } from '../../components/profile.modal'
 
 const HomeScreen = ({navigation}) => {
+   const profile_modal_ref = React.useRef(null)
 
    const goTo = path => navigation.navigate(path)
+
+   function openModal(){
+      if(profile_modal_ref){
+         profile_modal_ref.current.open()
+      }
+   }
 
    return (
       <AppStatusBar bgColor={COLORS.PRIMARY} barStyle={'light-content'}>
@@ -27,7 +35,7 @@ const HomeScreen = ({navigation}) => {
                      <Image source={profile2} resizeMode={'contain'} style={{ width: '100%', height: '100%' }} />
                   </View>
                   <View style={styles.header_button_container}>
-                     <Pressable android_ripple={{
+                     <Pressable onPress={openModal} android_ripple={{
                         color: 'rgba(255, 255, 255, 0.15)'
                      }} style={styles.header_button}>
                         <Ionicons name='person' size={35} color='white' />
@@ -73,6 +81,7 @@ const HomeScreen = ({navigation}) => {
             <Space />
             <Space />
             <Space />
+            <ProfileModal ref={profile_modal_ref}/>
          </ScrollView>
       </AppStatusBar>
    )
