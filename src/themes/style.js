@@ -19,7 +19,9 @@ const STYLES = StyleSheet.create({
    title: {
       fontSize: SIZES.H5,
       fontWeight: 'bold',
-      color: COLORS.DARK_500
+      color: COLORS.DARK_500,
+      paddingHorizontal: SIZES.SMALL_PADDING,
+      flex: 1
    },
    subtitle: {
       fontSize: SIZES.H6,
@@ -64,9 +66,9 @@ const STYLES = StyleSheet.create({
       overflow: 'hidden'
    },
    button_text_primary: {
-     color: COLORS.WHITE,
-     fontSize: SIZES.H7,
-     textAlign: "center"
+      color: COLORS.WHITE,
+      fontSize: SIZES.H7,
+      textAlign: 'center'
    },
    button_primary_outline: {
       borderWidth: 1,
@@ -93,21 +95,39 @@ const STYLES = StyleSheet.create({
    row_between: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      width: '100%'
    },
    row_end: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      width: '100%'
    },
    row_start: {
       flexDirection: 'row',
       justifyContent: 'flex-start',
-      alignItems: 'center'
+      alignItems: 'center',
+      width: '100%'
    },
    text_sm: {
       fontSize: 12,
       color: COLORS.DARK_300
+   },
+   header_container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: SIZES.DEFAULT_PADDING,
+      paddingVertical: SIZES.SMALL_PADDING
+   },
+   close_button: {
+      overflow: 'hidden',
+      borderRadius: 200,
+      flex: 0
+   },
+   button_icon: {
+      padding: SIZES.SMALL_PADDING,
+      borderRadius: 200
    }
 })
 

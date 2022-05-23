@@ -3,7 +3,7 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import { AppModal } from '../base-component/modal'
 import COLORS from '../themes/colors'
 import SIZES from '../themes/sizes'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons,Entypo } from '@expo/vector-icons'
 import { AppTextInput } from './app-text-input'
 import { Context as AuthContext } from '../contexts/authContext'
 import STYLES from '../themes/style'
@@ -100,13 +100,13 @@ export const ProfileModal = React.forwardRef((props, ref) => {
                label={'Adresse e-mail'}
                onChange={(val) => setValue('email', val)}
                value={getValue('email', '')}
-               iconLeft={() => <Ionicons name={'person'} size={30} color={COLORS.DARK_300} />}
+               iconLeft={() => <Entypo name="email" size={30} color={COLORS.DARK_300} />}
             />
             <AppTextInput
                label={'Téléphone'}
                onChange={(val) => setValue('phone', val)}
                value={getValue('phone', '')}
-               iconLeft={() => <Ionicons name={'person'} size={30} color={COLORS.DARK_300} />}
+               iconLeft={() => <Entypo name="phone" size={30} color={COLORS.DARK_300} />}
             />
             <AppTextInput
                label={'Fonction'}

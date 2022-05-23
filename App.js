@@ -4,6 +4,7 @@ import AuthFlow from './src/navigations/auth-flow'
 import { Provider as AuthProvider } from './src/contexts/authContext'
 import PersonnelFlow from './src/navigations/personnel-flow'
 import EnseignantFlow from './src/navigations/enseignant-flow'
+import './src/calendar-local-config'
 
 const baseNavigator = createSwitchNavigator({
    AuthFlow: AuthFlow,
