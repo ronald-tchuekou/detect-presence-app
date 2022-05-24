@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import SIZES from '../../themes/sizes'
 import { AppStatusBar } from '../../components'
 import COLORS from '../../themes/colors'
@@ -14,9 +14,65 @@ moment.locale('fr')
 const ProgramCourseScreen = ({ navigation }) => {
 
    const [currentDate, setCurrentDate] = React.useState('2022-05-18')
+   const [calendar_items, setCalendarItems] = React.useState({
+      '2022-05-18': [{ name: 'item 1 - any js object' }],
+      '2022-05-19': [{ name: 'item 2 - any js object' }],
+      '2022-05-20': [],
+      '2022-05-21': [{ name: 'item 3 - any js object' }, { name: 'any js object' }]
+   })
 
    function close() {
       navigation.pop()
+   }
+
+   function loadItems() {
+      // TODO
+   }
+
+   function renderItem(reservation, isFirst) {
+      const marginTop = isFirst ? SIZES.DEFAULT_MARGIN : 0;
+
+      const _styles = StyleSheet.create({
+         badge: {
+            position: 'absolute',
+            top: -10,
+            right: 10,
+            paddingHorizontal: 6,
+            paddingVertical: 2,
+            borderRadius: 10,
+            backgroundColor: COLORS.SUCCESS,
+            color: 'white',
+            fontSize: 9
+         }
+      })
+
+      return (
+         <TouchableOpacity
+            testID={"item"}
+            style={[styles.item, {marginTop}]}
+            onPress={() => {}}
+         >
+            <View style={{
+               flex: 1,
+               flexDirection: 'row',
+               justifyContent: 'space-between',
+               alignItems: 'center'
+            }}>
+               <Text style={{fontSize: SIZES.H6, color: COLORS.DARK_500}}>8h00 - 9h00</Text>
+               <Text style={{fontSize: SIZES.H6, color: COLORS.DARK_500}}>SVT</Text>
+               <Text style={{fontSize: SIZES.H6, color: COLORS.DARK_500}}>2nd C1</Text>
+            </View>
+            <Text style={_styles.badge}>Clôturé</Text>
+         </TouchableOpacity>
+      )
+   }
+
+   function renderEmptyDate() {
+      return null
+   }
+
+   function rowHasChanged(r1, r2) {
+      return r1.name !== r2.name
    }
 
    return (
@@ -34,17 +90,35 @@ const ProgramCourseScreen = ({ navigation }) => {
          <Text style={styles.header_title}>{moment(currentDate).format('MMMM YYYY')}</Text>
          <View style={{ flex: 1 }}>
             <Agenda
-               selected={moment(currentDate).format('YYYY-MM-DD')}
-               loadItemsForMonth={info => {
-                  setCurrentDate(info.dateString)
+               testID={'agenda'}
+               items={{
+                  '2022-05-18': [
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' }
+                  ],
+                  '2022-05-19': [
+                     { name: 'item 2 - any js object' },
+                     { name: 'item 2 - any js object' },
+                     { name: 'item 2 - any js object' }
+                  ],
+                  '2022-05-20': [],
+                  '2022-05-21': [
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' },
+                     { name: 'item 1 - any js object' }
+                  ],
                }}
-               onCalendarToggled={calendarOpened => {
-                  console.log(calendarOpened)
-               }}
-               pastScrollRange={20}
-               futureScrollRange={20}
-               onRefresh={() => console.log('Refreshing...')}
-               refreshing={false}
+               loadItemsForMonth={loadItems}
+               selected={'2022-05-18'}
+               renderItem={renderItem}
+               renderEmptyDate={renderEmptyDate}
+               rowHasChanged={rowHasChanged}
+               showClosingKnob={true}
                theme={{
                   selectedDayBackgroundColor: COLORS.PRIMARY,
                   selectedDayTextColor: COLORS.WHITE,
@@ -72,6 +146,21 @@ const styles = StyleSheet.create({
       fontSize: SIZES.H5,
       color: COLORS.DARK_500,
       textAlign: 'center'
+   },
+   item: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: COLORS.DARK_200,
+      borderRadius: 10,
+      padding: 10,
+      position: 'relative',
+      marginRight: SIZES.SMALL_MARGIN,
+      marginBottom: SIZES.DEFAULT_MARGIN
+   },
+   emptyDate: {
+      height: 15,
+      flex: 1,
+      paddingTop: 30
    }
 })
 
