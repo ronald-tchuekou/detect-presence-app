@@ -30,7 +30,7 @@ const ProgramCourseScreen = ({ navigation }) => {
    }
 
    function renderItem(reservation, isFirst) {
-      const marginTop = isFirst ? SIZES.DEFAULT_MARGIN : 0;
+      const marginTop = isFirst ? SIZES.DEFAULT_MARGIN : 0
 
       const _styles = StyleSheet.create({
          badge: {
@@ -48,9 +48,10 @@ const ProgramCourseScreen = ({ navigation }) => {
 
       return (
          <TouchableOpacity
-            testID={"item"}
-            style={[styles.item, {marginTop}]}
-            onPress={() => {}}
+            testID={'item'}
+            style={[styles.item, { marginTop }]}
+            onPress={() => {
+            }}
          >
             <View style={{
                flex: 1,
@@ -58,9 +59,9 @@ const ProgramCourseScreen = ({ navigation }) => {
                justifyContent: 'space-between',
                alignItems: 'center'
             }}>
-               <Text style={{fontSize: SIZES.H6, color: COLORS.DARK_500}}>8h00 - 9h00</Text>
-               <Text style={{fontSize: SIZES.H6, color: COLORS.DARK_500}}>SVT</Text>
-               <Text style={{fontSize: SIZES.H6, color: COLORS.DARK_500}}>2nd C1</Text>
+               <Text style={{ fontSize: SIZES.H6, color: COLORS.DARK_500 }}>8h00 - 9h00</Text>
+               <Text style={{ fontSize: SIZES.H6, color: COLORS.DARK_500 }}>SVT</Text>
+               <Text style={{ fontSize: SIZES.H6, color: COLORS.DARK_500 }}>2nd C1</Text>
             </View>
             <Text style={_styles.badge}>Clôturé</Text>
          </TouchableOpacity>
@@ -111,7 +112,7 @@ const ProgramCourseScreen = ({ navigation }) => {
                      { name: 'item 1 - any js object' },
                      { name: 'item 1 - any js object' },
                      { name: 'item 1 - any js object' }
-                  ],
+                  ]
                }}
                loadItemsForMonth={loadItems}
                selected={'2022-05-18'}

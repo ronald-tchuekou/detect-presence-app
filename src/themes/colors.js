@@ -14,9 +14,15 @@ const COLORS = {
 
    // Notifications colors.
    ERROR: '#FE4335',
+   ERROR_75: 'rgba(254,67,53,0.75)',
+   ERROR_50: 'rgba(254,67,53,0.50)',
+   ERROR_25: 'rgba(254,67,53,0.25)',
    ERROR_15: 'rgba(254,67,53,0.15)',
    WARNING: '#FFAA00',
    SUCCESS: '#21A621',
+   SUCCESS_75: 'rgba(33,166,33,0.75)',
+   SUCCESS_50: 'rgba(33,166,33,0.50)',
+   SUCCESS_25: 'rgba(33,166,33,0.25)',
    SUCCESS_15: 'rgba(33,166,33,0.15)',
 
    // Text colors.
