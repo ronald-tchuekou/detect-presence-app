@@ -59,9 +59,9 @@ const ProgramCourseScreen = ({ navigation }) => {
                justifyContent: 'space-between',
                alignItems: 'center'
             }}>
-               <Text style={{ fontSize: SIZES.H6, color: COLORS.DARK_500 }}>8h00 - 9h00</Text>
-               <Text style={{ fontSize: SIZES.H6, color: COLORS.DARK_500 }}>SVT</Text>
-               <Text style={{ fontSize: SIZES.H6, color: COLORS.DARK_500 }}>2nd C1</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>8h00 - 9h00</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>SVT</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>2nd C1</Text>
             </View>
             <Text style={_styles.badge}>Clôturé</Text>
          </TouchableOpacity>

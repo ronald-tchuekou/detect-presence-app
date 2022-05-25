@@ -81,7 +81,9 @@ const HomeScreen = ({navigation}) => {
             <Space />
             <Space />
             <Space />
-            <ProfileModal ref={profile_modal_ref}/>
+            <View style={{height: 0, width: 0}}>
+               <ProfileModal ref={profile_modal_ref}/>
+            </View>
          </ScrollView>
       </AppStatusBar>
    )
