@@ -8,5 +8,6 @@ export const ENV = {
    base: {
       url: 'https://api.bigoodee.com'
    },
-   user_key: '@detect_presence_current_user_key'
+   user_key: '@detect_presence_current_user_key',
+   notification_channel_id: 'detect_presence_notifications_channel_id'
 }

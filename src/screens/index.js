@@ -1,5 +1,5 @@
 import LoginScreen from './auth/LoginScreen'
-import AgentHomeScreen  from './agent/HomeScreen'
+import AgentHomeScreen  from './personnal/HomeScreen'
 import TeacherHomeScreen from './teacher/HomeScreen'
 
 export {

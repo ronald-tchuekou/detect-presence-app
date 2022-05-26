@@ -10,7 +10,8 @@ const API_ROUTES = {
    SIGNING: '/auth/signing',
    VERIFY_USER_EMAIL: '/auth/verify-email',
    RESET_USER_PASSWORD: 'auth/reset-password',
-   UPDATE_PASS: 'auth/update-password'
+   UPDATE_PASS: 'auth/update-password',
+   GET_FIlES: 'files'
 }
 
 export default API_ROUTES

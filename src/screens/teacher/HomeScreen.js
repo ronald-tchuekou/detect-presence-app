@@ -1,50 +1,17 @@
 import React from 'react'
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import SIZES from '../../themes/sizes'
-import { AppStatusBar, Space } from '../../components'
+import { AppStatusBar, HomeHeader, Space } from '../../components'
 import COLORS from '../../themes/colors'
-import { Feather, Ionicons } from '@expo/vector-icons'
-import { cours_session, financial_state, presence_state, profile2, program_course } from '../../themes/images'
-import { ProfileModal } from '../../components/profile.modal'
+import { cours_session, financial_state, presence_state, program_course } from '../../themes/images'
 
-const HomeScreen = ({navigation}) => {
-   const profile_modal_ref = React.useRef(null)
-
+const HomeScreen = ({ navigation }) => {
    const goTo = path => navigation.navigate(path)
-
-   function openModal(){
-      if(profile_modal_ref){
-         profile_modal_ref.current.open()
-      }
-   }
 
    return (
       <AppStatusBar bgColor={COLORS.PRIMARY} barStyle={'light-content'}>
          <ScrollView style={{ flex: 1 }}>
-            <View style={styles.header_container}>
-               <View style={styles.header_background} />
-               <View style={styles.header_content}>
-                  <View style={styles.header_button_container}>
-                     <Pressable android_ripple={{
-                        color: 'rgba(255, 255, 255, 0.15)'
-                     }} style={styles.header_button}>
-                        <Feather name='image' size={35} color='white' />
-                     </Pressable>
-                  </View>
-                  <View style={styles.image_container}>
-                     <Image source={profile2} resizeMode={'contain'} style={{ width: '100%', height: '100%' }} />
-                  </View>
-                  <View style={styles.header_button_container}>
-                     <Pressable onPress={openModal} android_ripple={{
-                        color: 'rgba(255, 255, 255, 0.15)'
-                     }} style={styles.header_button}>
-                        <Ionicons name='person' size={35} color='white' />
-                     </Pressable>
-                  </View>
-               </View>
-               <Text style={styles.header_name}>Ronald Tchuekou</Text>
-               <Text style={styles.header_role}>Enseignant</Text>
-            </View>
+            <HomeHeader />
             <Space />
             <Space />
             <Space />
@@ -57,21 +24,21 @@ const HomeScreen = ({navigation}) => {
             }}>
                <View style={styles.line}>
                   <ButtonCard
-                     onPress={() => goTo("ProgramCourseScreen")}
+                     onPress={() => goTo('ProgramCourseScreen')}
                      label={'Programmes de cours'}
                      image={program_course} />
                   <ButtonCard
-                     onPress={() => goTo("FinanceStateScreen")}
+                     onPress={() => goTo('FinanceStateScreen')}
                      label={'Etat des finances'}
                      image={financial_state} />
                </View>
                <View style={styles.line}>
                   <ButtonCard
-                     onPress={() => goTo("CourseSessionScreen")}
+                     onPress={() => goTo('CourseSessionScreen')}
                      label={'Session de cours'}
                      image={cours_session} />
                   <ButtonCard
-                     onPress={() => goTo("PresenceStateScreen")}
+                     onPress={() => goTo('PresenceStateScreen')}
                      label={'Etat de présence'}
                      image={presence_state} />
                </View>
@@ -81,15 +48,12 @@ const HomeScreen = ({navigation}) => {
             <Space />
             <Space />
             <Space />
-            <View style={{height: 0, width: 0}}>
-               <ProfileModal ref={profile_modal_ref}/>
-            </View>
          </ScrollView>
       </AppStatusBar>
    )
 }
 
-const ButtonCard = ({ image, label, onPress }) => {
+export const ButtonCard = ({ image, label, onPress }) => {
    const button_styles = StyleSheet.create({
       container1: {
          borderRadius: SIZES.DEFAULT_MARGIN,
@@ -120,11 +84,12 @@ const ButtonCard = ({ image, label, onPress }) => {
                source={image}
                style={{
                   width: '100%',
-                  height: 150
+                  height: 100,
+                  flex: 1
                }}
                resizeMode={'contain'} />
             <Text style={{
-               fontSize: SIZES.H6,
+               fontSize: SIZES.H7,
                color: COLORS.PRIMARY,
                fontWeight: '600',
                textAlign: 'center'

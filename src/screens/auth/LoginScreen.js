@@ -40,8 +40,8 @@ const LoginScreen = ({ navigation }) => {
             <Space />
             <AppTextInput
                label={'Nom d\'utilisateur'}
-               onChange={(val) => setValue('username', val)}
-               value={getValue('username', '')}
+               onChange={(val) => setValue('email', val)}
+               value={getValue('email', '')}
                iconLeft={() => <Ionicons name={'person'} size={30} color={COLORS.DARK_300} />}
             />
             <Space />
@@ -56,7 +56,10 @@ const LoginScreen = ({ navigation }) => {
             <Space />
             <Pressable
                onPress={() => {
-                  navigation.navigate('EnseignantFlow')
+                  if (getValue('email', null))
+                     navigation.navigate('PersonnelFlow')
+                  else
+                     navigation.navigate('EnseignantFlow')
                }}
                android_ripple={{
                   color: 'rgba(255,255,255,0.53)'

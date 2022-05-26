@@ -10,6 +10,8 @@ const baseNavigator = createSwitchNavigator({
    AuthFlow: AuthFlow,
    PersonnelFlow: PersonnelFlow,
    EnseignantFlow: EnseignantFlow
+}, {
+   initialRouteName: 'AuthFlow'
 })
 
 const App = createAppContainer(baseNavigator)
