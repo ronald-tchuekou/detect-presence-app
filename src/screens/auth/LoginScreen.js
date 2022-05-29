@@ -1,17 +1,21 @@
 import React from 'react'
 import { Pressable, Text, TouchableOpacity, View } from 'react-native'
 import STYLES from '../../themes/style'
-import { AppStatusBar, AppTextInput, Space } from '../../components'
+import { AppStatusBar, AppTextInput, ModalLoader, Space } from '../../components'
 import COLORS from '../../themes/colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Context as AuthContext } from '../../contexts/authContext'
 import SIZES from '../../themes/sizes'
+import { ToastMessage } from '../../utils'
+import Validator from 'validator'
 
 const LoginScreen = ({ navigation }) => {
+   const loader_ref = React.useRef(null)
 
    const {
       state: { formData },
-      setFormDataField
+      setFormDataField,
+      signIn
    } = React.useContext(AuthContext)
 
    function setValue(key, value) {
@@ -23,6 +27,44 @@ const LoginScreen = ({ navigation }) => {
       if (formData)
          return formData[key] || default_value
       return default_value
+   }
+
+   function submit() {
+      const email = getValue('email', '').trim()
+      const password = getValue('password', '').trim()
+
+      if (email === '' || password === '') {
+         ToastMessage('Veuillez renseigner votre adresse e-mail et votre mot de passe.')
+         return
+      }
+
+      if (!Validator.isEmail(email)) {
+         ToastMessage('Votre adresse e-mail n\'est pas valide.')
+         return
+      }
+
+      const data = {
+         email: email,
+         password: password
+      }
+
+      loader_ref.current.show()
+      signIn(data, (err, res) => {
+         loader_ref.current.dismiss()
+         if (err) {
+            console.log('Error on sign in the user : ', err)
+            if (err.message)
+               ToastMessage(err.message)
+            return
+         }
+         if (!res) {
+            ToastMessage('Une erreur inconnue lors de la connexion')
+         }
+         if (res.role === 'Agent')
+            navigation.navigate('PersonnelFlow')
+         else if (res.role === 'Enseignant')
+            navigation.navigate('EnseignantFlow')
+      })
    }
 
    return (
@@ -39,7 +81,8 @@ const LoginScreen = ({ navigation }) => {
             <Space />
             <Space />
             <AppTextInput
-               label={'Nom d\'utilisateur'}
+               label={'Adresse e-mail'}
+               type={'email-address'}
                onChange={(val) => setValue('email', val)}
                value={getValue('email', '')}
                iconLeft={() => <Ionicons name={'person'} size={30} color={COLORS.DARK_300} />}
@@ -55,12 +98,7 @@ const LoginScreen = ({ navigation }) => {
             <Space />
             <Space />
             <Pressable
-               onPress={() => {
-                  if (getValue('email', null))
-                     navigation.navigate('PersonnelFlow')
-                  else
-                     navigation.navigate('EnseignantFlow')
-               }}
+               onPress={submit}
                android_ripple={{
                   color: 'rgba(255,255,255,0.53)'
                }}
@@ -85,6 +123,13 @@ const LoginScreen = ({ navigation }) => {
             <Space />
             <Space />
             <Space />
+            <View style={{
+               overflow: 'hidden',
+               height: 0,
+               width: 0
+            }}>
+               <ModalLoader ref={loader_ref} />
+            </View>
          </View>
       </AppStatusBar>
    )

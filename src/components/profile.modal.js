@@ -14,7 +14,7 @@ export const ProfileModal = React.forwardRef((props, ref) => {
    const { height } = Dimensions.get('window')
 
    const {
-      state: { formData },
+      state: { formData, currentUser },
       setFormDataField
    } = React.useContext(AuthContext)
 
@@ -38,6 +38,12 @@ export const ProfileModal = React.forwardRef((props, ref) => {
    }
 
    function open() {
+      setValue('matricule', currentUser.matricule)
+      setValue('lastname', currentUser.lastname)
+      setValue('firstname', currentUser.firstname)
+      setValue('email', currentUser.email)
+      setValue('phone', currentUser.phone)
+      setValue('function', currentUser.role)
       setVisible(true)
    }
 
@@ -80,6 +86,7 @@ export const ProfileModal = React.forwardRef((props, ref) => {
             <Text style={styles.title}>Mon Profil</Text>
             <AppTextInput
                label={'Matricule'}
+               readOnly={false}
                onChange={(val) => setValue('matricule', val)}
                value={getValue('matricule', '')}
                iconLeft={() => <Ionicons name={'person'} size={30} color={COLORS.DARK_300} />}
@@ -110,6 +117,7 @@ export const ProfileModal = React.forwardRef((props, ref) => {
             />
             <AppTextInput
                label={'Fonction'}
+               readOnly={false}
                onChange={(val) => setValue('function', val)}
                value={getValue('function', '')}
                iconLeft={() => <Ionicons name={'person'} size={30} color={COLORS.DARK_300} />}

@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
    return (
       <AppStatusBar bgColor={COLORS.PRIMARY} barStyle={'light-content'}>
          <ScrollView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
-            <HomeHeader />
+            <HomeHeader navigation={navigation} />
             <Space />
             <Space />
             <Space />

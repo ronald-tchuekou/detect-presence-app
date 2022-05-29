@@ -1,21 +1,46 @@
 import React from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { Feather, Ionicons } from '@expo/vector-icons'
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons'
 import { profile2 } from '../themes/images'
 import COLORS from '../themes/colors'
 import SIZES from '../themes/sizes'
 import { pickImage } from '../utils'
 import { ProfileModal } from './profile.modal'
+import { Context as AuthContext } from '../contexts/authContext'
 
-export const HomeHeader = () => {
+export const HomeHeader = ({ navigation }) => {
    const profile_modal_ref = React.useRef(null)
 
    const [user_profile, setUserProfile] = React.useState(null)
+
+   const { state: { currentUser }, signOut } = React.useContext(AuthContext)
+
+   const full_name = currentUser ? currentUser.firstname + ' ' + currentUser.lastname : ''
 
    function openModal() {
       if (profile_modal_ref) {
          profile_modal_ref.current.open()
       }
+   }
+
+   function logout() {
+      Alert.alert(
+         'Confirmation',
+         'Voulez-vous vraiment vous déconnecter ?',
+         [
+            {
+               text: 'Déconnexion',
+               onPress: () => signOut(() => {
+                  navigation.navigate('AuthFlow')
+               })
+            },
+            {
+               text: 'Annuler',
+               onPress: () => {
+               }
+            }
+         ]
+      )
    }
 
    async function pickImageToGalerie() {
@@ -40,15 +65,24 @@ export const HomeHeader = () => {
          <View style={styles.header_background} />
          <View style={styles.header_content}>
             <View style={styles.header_button_container}>
-               <Pressable onPress={pickImageToGalerie} android_ripple={{
+               <Pressable onPress={logout} android_ripple={{
                   color: 'rgba(255, 255, 255, 0.15)'
                }} style={styles.header_button}>
-                  <Feather name='image' size={35} color='white' />
+                  <AntDesign name='logout' size={35} color={COLORS.ERROR} />
                </Pressable>
             </View>
             <View style={styles.image_container}>
-               <Image source={user_profile ? { uri: user_profile } : profile2} resizeMode={'contain'}
-                      style={{ width: '100%', height: '100%' }} />
+               <Image
+                  source={user_profile ? { uri: user_profile } : profile2}
+                  resizeMode={'contain'}
+                  style={{ width: '100%', height: '100%' }} />
+               <View style={styles.image_button_edit}>
+                  <Pressable onPress={pickImageToGalerie} android_ripple={{
+                     color: 'rgba(255, 255, 255, 0.15)'
+                  }} style={styles.header_button}>
+                     <Feather name='image' size={35} color='white' />
+                  </Pressable>
+               </View>
             </View>
             <View style={styles.header_button_container}>
                <Pressable onPress={openModal} android_ripple={{
@@ -58,8 +92,8 @@ export const HomeHeader = () => {
                </Pressable>
             </View>
          </View>
-         <Text style={styles.header_name}>Ronald Tchuekou</Text>
-         <Text style={styles.header_role}>Enseignant</Text>
+         <Text style={styles.header_name}>{full_name}</Text>
+         <Text style={styles.header_role}>{currentUser ? currentUser.role : ''}</Text>
          <View style={{ height: 0, width: 0, overflow: 'hidden' }}>
             <ProfileModal ref={profile_modal_ref} />
          </View>
@@ -99,6 +133,7 @@ const styles = StyleSheet.create({
       borderRadius: 200
    },
    image_container: {
+      position: 'relative',
       height: 150,
       width: 150,
       backgroundColor: COLORS.DARK_200,
@@ -106,6 +141,17 @@ const styles = StyleSheet.create({
       marginVertical: SIZES.SMALL_PADDING,
       marginHorizontal: SIZES.DEFAULT_MARGIN,
       overflow: 'hidden'
+   },
+   image_button_edit: {
+      position: 'absolute',
+      bottom: -10,
+      right: 30,
+      borderRadius: 500,
+      overflow: 'hidden',
+      borderWidth: 1,
+      borderColor: COLORS.WHITE,
+      backgroundColor: 'rgba(0,0,0,0.25)',
+
    },
    header_name: {
       color: COLORS.WHITE,

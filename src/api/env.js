@@ -6,7 +6,7 @@
 
 export const ENV = {
    base: {
-      url: 'https://api.bigoodee.com'
+      url: 'https://detect-presence.herokuapp.com'
    },
    user_key: '@detect_presence_current_user_key',
    notification_channel_id: 'detect_presence_notifications_channel_id'

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Notifications from 'expo-notifications'
 import * as ImagePicker from 'expo-image-picker'
-import { Alert, Platform } from 'react-native'
+import { Alert, Platform, ToastAndroid } from 'react-native'
 import { ENV } from './api/env'
 import COLORS from './themes/colors'
 import API_ROUTES from './api/api_routes'
@@ -134,3 +134,5 @@ export const pickImage = async (callback) => {
          callback(e, undefined)
    }
 }
+
+export const ToastMessage = (message) => ToastAndroid.show(message, ToastAndroid.LONG)

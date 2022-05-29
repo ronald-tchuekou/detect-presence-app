@@ -15,6 +15,8 @@ const reducer = (state, action) => {
       case 'set_form_data_field':
          const payload = action.payload
          return { ...state, formData: { ...(state.formData ? state.formData : {}), [payload.key]: payload.value } }
+      case 'reset_form_data':
+         return {...state, formData: null}
       case 'set_current_user':
          return { ...state, currentUser: action.payload }
       case 'set_current_user_token':
@@ -42,6 +44,7 @@ const signIn = (dispatch) => {
 const signOut = (dispatch) => {
    return async (callback) => {
       await storeLocaleValue(ENV.user_key, null, (error, value) => {
+         dispatch({ type: 'reset_form_data' })
          dispatch({ type: 'set_current_user', payload: null })
          dispatch({ type: 'set_current_user_token', payload: null })
          callback(undefined, value)
