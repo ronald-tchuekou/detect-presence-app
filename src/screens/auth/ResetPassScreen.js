@@ -1,17 +1,23 @@
 import React from 'react'
-import { AppStatusBar, AppTextInput, Space } from '../../components'
+import { AppStatusBar, AppTextInput, ModalLoader, Space } from '../../components'
 import COLORS from '../../themes/colors'
 import { Pressable, Text, View } from 'react-native'
 import STYLES from '../../themes/style'
 import SIZES from '../../themes/sizes'
 import { Ionicons } from '@expo/vector-icons'
 import { Context as AuthContext } from '../../contexts/authContext'
+import { ToastMessage } from '../../utils'
 
 const ResetPassScreen = ({ navigation }) => {
+   const loader_ref = React.useRef(null)
+
+   const email = navigation.getParam('email')
+   const user_id = navigation.getParam('user_id')
 
    const {
       state: { formData },
-      setFormDataField
+      setFormDataField,
+      resetUserPassword
    } = React.useContext(AuthContext)
 
    function setValue(key, value) {
@@ -23,6 +29,52 @@ const ResetPassScreen = ({ navigation }) => {
       if (formData)
          return formData[key] || default_value
       return default_value
+   }
+
+   function submit() {
+      const new_password = getValue('new_password', '').trim()
+      const confirmation = getValue('confirm_password', '').trim()
+
+      if (new_password === '' || confirmation === '') {
+         ToastMessage('Veuillez renseigner votre nouveau mot de passe et sa confirmation.')
+         return
+      }
+
+      if (new_password !== confirmation) {
+         ToastMessage('Votre mot de passe de confirmation est n\'est pas correct.')
+         return
+      }
+
+      if (new_password.length < 8) {
+         ToastMessage('Votre mot de passe doit avoir au moins 8 caractères.')
+         return
+      }
+
+      const data = {
+         password: new_password,
+         user_id,
+         email
+      }
+
+      loader_ref.current.show()
+      resetUserPassword(data, (err, res) => {
+         loader_ref.current.dismiss()
+         if (err) {
+            console.log(err)
+            if (err.message)
+               ToastMessage(err.message)
+            return
+         }
+
+         if (!res) {
+            ToastMessage('Une erreur inconnue lors de la connexion')
+            return
+         }
+         if (res.role === 'Agent')
+            navigation.navigate('PersonnelFlow')
+         else if (res.role === 'Enseignant')
+            navigation.navigate('EnseignantFlow')
+      })
    }
 
    return (
@@ -65,9 +117,7 @@ const ResetPassScreen = ({ navigation }) => {
             <Space />
             <Space />
             <Pressable
-               onPress={() => {
-                  navigation.navigate('PersonnelFlow')
-               }}
+               onPress={submit}
                android_ripple={{
                   color: 'rgba(255,255,255,0.53)'
                }}
@@ -77,6 +127,7 @@ const ResetPassScreen = ({ navigation }) => {
             <Space />
             <Space />
             <Space />
+            <ModalLoader ref={loader_ref} />
          </View>
       </AppStatusBar>
    )

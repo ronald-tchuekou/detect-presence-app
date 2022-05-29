@@ -10,7 +10,7 @@ export const ModalLoader = React.forwardRef((props, ref) => {
       dismiss: () => setShow(false)
    }))
    return (
-      <View style={[loader_styles.centeredView, { height: 0, width: 0 }]}>
+      <View style={[loader_styles.centeredView, { height: 0, width: 0, overflow: 'hidden' }]}>
          <Modal
             animationType='fade'
             transparent={true}

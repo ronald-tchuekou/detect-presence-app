@@ -59,6 +59,7 @@ const LoginScreen = ({ navigation }) => {
          }
          if (!res) {
             ToastMessage('Une erreur inconnue lors de la connexion')
+            return
          }
          if (res.role === 'Agent')
             navigation.navigate('PersonnelFlow')
@@ -123,13 +124,7 @@ const LoginScreen = ({ navigation }) => {
             <Space />
             <Space />
             <Space />
-            <View style={{
-               overflow: 'hidden',
-               height: 0,
-               width: 0
-            }}>
-               <ModalLoader ref={loader_ref} />
-            </View>
+            <ModalLoader ref={loader_ref} />
          </View>
       </AppStatusBar>
    )

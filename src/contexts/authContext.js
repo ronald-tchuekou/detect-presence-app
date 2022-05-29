@@ -67,14 +67,15 @@ const verifyUserEmail = (dispatch) => {
 const resetUserPassword = (dispatch) => {
    return async (data, callback) => {
       try {
-         const user = await detectPresenceApi.post(API_ROUTES.RESET_USER_PASSWORD, data)
-         const response = await detectPresenceApi.post(API_ROUTES.SIGNING, user.data)
+         await detectPresenceApi.put(API_ROUTES.RESET_USER_PASSWORD, data)
+         const response = await detectPresenceApi.post(API_ROUTES.SIGNING, data)
          await storeLocaleValue(ENV.user_key, response.data, (error, value) => {
             dispatch({ type: 'set_current_user', payload: response.data })
             dispatch({ type: 'set_current_user_token', payload: response.data.accessToken })
             callback(undefined, value)
          })
       } catch (e) {
+         console.log(e)
          callback(e.response.data, undefined)
       }
    }
