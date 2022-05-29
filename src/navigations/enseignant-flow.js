@@ -1,9 +1,11 @@
-import {createStackNavigator} from 'react-navigation-stack'
-import {TeacherHomeScreen} from "../screens"
-import ProgramCourseScreen from '../screens/teacher/ProgramCourseScreen'
-import FinanceStateScreen from '../screens/teacher/FinanceStateScreen'
-import CourseSessionScreen from '../screens/teacher/CourseSessionScreen'
-import PresenceStateScreen from '../screens/teacher/PresenceStateScreen'
+import { createStackNavigator } from 'react-navigation-stack'
+import {
+   CourseSessionScreen,
+   FinanceStateScreen,
+   PresenceStateScreen,
+   ProgramCourseScreen,
+   TeacherHomeScreen
+} from '../screens'
 
 const EnseignantFlow = createStackNavigator({
    HomeScreen: TeacherHomeScreen,
@@ -12,7 +14,7 @@ const EnseignantFlow = createStackNavigator({
    CourseSessionScreen: CourseSessionScreen,
    PresenceStateScreen: PresenceStateScreen
 }, {
-   initialRouteName: "HomeScreen"
+   initialRouteName: 'HomeScreen'
 })
 
 export default EnseignantFlow

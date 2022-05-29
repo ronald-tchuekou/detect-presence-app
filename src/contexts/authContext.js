@@ -100,6 +100,14 @@ const updatePassword = (dispatch) => {
    }
 }
 
+const setUser = (dispatch) => {
+   return (data, callback) => {
+      dispatch({ type: 'set_current_user', payload: data })
+      dispatch({ type: 'set_current_user_token', payload: data.accessToken })
+      callback()
+   }
+}
+
 const setFormDataField = (dispatch) => {
    return (data, callback) => {
       dispatch({ type: 'set_form_data_field', payload: data })
@@ -113,7 +121,8 @@ export const { Context, Provider } = createDataContext(reducer, {
    updatePassword,
    verifyUserEmail,
    resetUserPassword,
-   setFormDataField
+   setFormDataField,
+   setUser
 }, {
    currentUserToken: null,
    currentUser: null,

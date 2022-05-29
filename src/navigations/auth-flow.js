@@ -1,14 +1,12 @@
-import {createStackNavigator} from 'react-navigation-stack'
-import { LoginScreen } from '../screens'
-import PassForgotScreen from '../screens/auth/PassForgotScreen'
-import ResetPassScreen from '../screens/auth/ResetPassScreen'
+import { createStackNavigator } from 'react-navigation-stack'
+import { LoginScreen, PassForgotScreen, ResetPassScreen } from '../screens'
 
 const AuthFlow = createStackNavigator({
    LoginScreen: LoginScreen,
    PassForgotScreen: PassForgotScreen,
    ResetPassScreen: ResetPassScreen
 }, {
-   initialRouteName: "LoginScreen"
+   initialRouteName: 'LoginScreen'
 })
 
 export default AuthFlow

@@ -5,13 +5,15 @@ import { Provider as AuthProvider } from './src/contexts/authContext'
 import PersonnelFlow from './src/navigations/personnel-flow'
 import EnseignantFlow from './src/navigations/enseignant-flow'
 import './src/calendar-local-config'
+import StartFlow from './src/navigations/start-flow'
 
 const baseNavigator = createSwitchNavigator({
+   StartFlow: StartFlow,
    AuthFlow: AuthFlow,
    PersonnelFlow: PersonnelFlow,
    EnseignantFlow: EnseignantFlow
 }, {
-   initialRouteName: 'AuthFlow'
+   initialRouteName: 'StartFlow'
 })
 
 const App = createAppContainer(baseNavigator)

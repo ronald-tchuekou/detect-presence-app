@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons'
 import { profile2 } from '../themes/images'
 import COLORS from '../themes/colors'
@@ -7,13 +7,19 @@ import SIZES from '../themes/sizes'
 import { pickImage } from '../utils'
 import { ProfileModal } from './profile.modal'
 import { Context as AuthContext } from '../contexts/authContext'
+import { ENV } from '../api/env'
 
 export const HomeHeader = ({ navigation }) => {
    const profile_modal_ref = React.useRef(null)
+   const loader_ref = React.useRef(null)
 
-   const [user_profile, setUserProfile] = React.useState(null)
+   const {
+      state: { currentUser, currentUserToken },
+      signOut,
+      setUserImage
+   } = React.useContext(AuthContext)
 
-   const { state: { currentUser }, signOut } = React.useContext(AuthContext)
+   console.log('Current user : ', currentUser)
 
    const full_name = currentUser ? currentUser.firstname + ' ' + currentUser.lastname : ''
 
@@ -55,9 +61,30 @@ export const HomeHeader = ({ navigation }) => {
    }
 
    function saveImage(imagePath) {
-      // Todo
-      if (imagePath)
-         setUserProfile(imagePath.uri)
+      const ext = imagePath.uri.split('.').pop()
+      const file = {
+         uri: imagePath.uri,
+         name: new Date().getTime() + '.' + ext,
+         type: `image/${ext}`
+      }
+
+      // Create formData with the file field.
+      const formData = new FormData()
+      formData.append('file', file)
+
+      loader_ref.current.show()
+      setUserImage(currentUserToken, formData, currentUser, (err, res) => {
+         loader_ref.current.dismiss()
+         if (err) {
+            if (err.message)
+               ToastAndroid.show(err.message, ToastAndroid.LONG)
+            else
+               console.log(err)
+            return
+         }
+         console.log(res)
+         ToastAndroid.show('Votre image à été ajoutée avec succès !', ToastAndroid.LONG)
+      })
    }
 
    return (
@@ -72,10 +99,19 @@ export const HomeHeader = ({ navigation }) => {
                </Pressable>
             </View>
             <View style={styles.image_container}>
-               <Image
-                  source={user_profile ? { uri: user_profile } : profile2}
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: '100%' }} />
+               {currentUser && currentUser.imageURL ? (
+                  <Image
+                     source={{ uri: `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.imageURL}` }}
+                     style={{ width: '100%', height: '100%' }}
+                     resizeMode={'contain'}
+                  />
+               ) : (
+                  <Image
+                     source={profile2}
+                     style={{ width: '100%', height: '100%' }}
+                     resizeMode={'contain'}
+                  />
+               )}
                <View style={styles.image_button_edit}>
                   <Pressable onPress={pickImageToGalerie} android_ripple={{
                      color: 'rgba(255, 255, 255, 0.15)'
@@ -150,7 +186,7 @@ const styles = StyleSheet.create({
       overflow: 'hidden',
       borderWidth: 1,
       borderColor: COLORS.WHITE,
-      backgroundColor: 'rgba(0,0,0,0.25)',
+      backgroundColor: 'rgba(0,0,0,0.25)'
 
    },
    header_name: {

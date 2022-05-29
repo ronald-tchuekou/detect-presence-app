@@ -1,7 +1,5 @@
 import { createStackNavigator } from 'react-navigation-stack'
-import { AgentHomeScreen } from '../screens'
-import FinanceStateScreen from '../screens/teacher/FinanceStateScreen'
-import PresenceStateScreen from '../screens/teacher/PresenceStateScreen'
+import { AgentHomeScreen, FinanceStateScreen, PresenceStateScreen } from '../screens'
 
 const PersonnelFlow = createStackNavigator({
    HomeScreen: AgentHomeScreen,
