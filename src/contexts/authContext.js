@@ -8,7 +8,7 @@ import createDataContext from './createDataContext'
 import detectPresenceApi from '../api/detect-presence-api'
 import API_ROUTES from '../api/api_routes'
 import { ENV } from '../api/env'
-import { storeLocaleValue } from '../utils'
+import { storeLocaleValue, uploadImage } from '../utils'
 
 const reducer = (state, action) => {
    switch (action.type) {
@@ -16,7 +16,7 @@ const reducer = (state, action) => {
          const payload = action.payload
          return { ...state, formData: { ...(state.formData ? state.formData : {}), [payload.key]: payload.value } }
       case 'reset_form_data':
-         return {...state, formData: null}
+         return { ...state, formData: null }
       case 'set_current_user':
          return { ...state, currentUser: action.payload }
       case 'set_current_user_token':
@@ -32,7 +32,7 @@ const signIn = (dispatch) => {
          const response = await detectPresenceApi.post(API_ROUTES.SIGNING, data)
          await storeLocaleValue(ENV.user_key, response.data, (error, value) => {
             dispatch({ type: 'set_current_user', payload: response.data })
-            dispatch({ type: 'set_current_user_token', payload: response.data.accessToken })
+            dispatch({ type: 'set_current_user_token', payload: response.data.token })
             callback(undefined, value)
          })
       } catch (e) {
@@ -71,7 +71,7 @@ const resetUserPassword = (dispatch) => {
          const response = await detectPresenceApi.post(API_ROUTES.SIGNING, data)
          await storeLocaleValue(ENV.user_key, response.data, (error, value) => {
             dispatch({ type: 'set_current_user', payload: response.data })
-            dispatch({ type: 'set_current_user_token', payload: response.data.accessToken })
+            dispatch({ type: 'set_current_user_token', payload: response.data.token })
             callback(undefined, value)
          })
       } catch (e) {
@@ -100,11 +100,58 @@ const updatePassword = (dispatch) => {
    }
 }
 
+const setUserImage = (dispatch) => {
+   return async (token, formData, user, callback) => {
+      try {
+         let fileJson
+         fileJson = await uploadImage(formData, token, 'avatar')
+         await detectPresenceApi.put(
+            `${API_ROUTES.GET_PERSONNEL + '/' + user.personnel_id}`,
+            { image_profile: fileJson.path },
+            {
+               headers: {
+                  'x-access-token': token
+               }
+            })
+         await storeLocaleValue(ENV.user_key, {
+            ...user,
+            image_profile: fileJson.path
+         }, (error, value) => {
+            dispatch({ type: 'set_current_user', payload: value })
+            dispatch({ type: 'set_current_user_token', payload: token })
+            callback(undefined, value)
+         })
+      } catch (e) {
+         callback(e.response.data, undefined)
+      }
+   }
+}
+
 const setUser = (dispatch) => {
    return (data, callback) => {
       dispatch({ type: 'set_current_user', payload: data })
-      dispatch({ type: 'set_current_user_token', payload: data.accessToken })
+      dispatch({ type: 'set_current_user_token', payload: data.token })
       callback()
+   }
+}
+
+const setNotificationToken = (dispatch) => {
+   return async (data, callback) => {
+      try {
+         const response = await detectPresenceApi.put(
+            API_ROUTES.GET_PERSONNEL + '/' + data.id,
+            {notify_token: data.notify_token},
+            {
+               headers: {
+                  'Content-Type': 'application/json',
+                  'x-access-token': data.token
+               }
+            }
+         )
+         callback(undefined, response.data)
+      } catch (e) {
+         callback(e.response.data, undefined)
+      }
    }
 }
 
@@ -122,7 +169,9 @@ export const { Context, Provider } = createDataContext(reducer, {
    verifyUserEmail,
    resetUserPassword,
    setFormDataField,
-   setUser
+   setUser,
+   setUserImage,
+   setNotificationToken
 }, {
    currentUserToken: null,
    currentUser: null,

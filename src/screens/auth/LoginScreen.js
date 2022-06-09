@@ -6,16 +6,17 @@ import COLORS from '../../themes/colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Context as AuthContext } from '../../contexts/authContext'
 import SIZES from '../../themes/sizes'
-import { ToastMessage } from '../../utils'
+import { registerForPushNotificationsAsync, ToastMessage } from '../../utils'
 import Validator from 'validator'
 
 const LoginScreen = ({ navigation }) => {
    const loader_ref = React.useRef(null)
 
    const {
-      state: { formData },
+      state: { formData, currentUser, currentUserToken },
       setFormDataField,
-      signIn
+      signIn,
+      setNotificationToken
    } = React.useContext(AuthContext)
 
    function setValue(key, value) {
@@ -61,11 +62,36 @@ const LoginScreen = ({ navigation }) => {
             ToastMessage('Une erreur inconnue lors de la connexion')
             return
          }
+         generationNotificationToken(res).then(() => {
+         })
          if (res.role === 'Agent')
             navigation.navigate('PersonnelFlow')
          else if (res.role === 'Enseignant')
             navigation.navigate('EnseignantFlow')
       })
+   }
+
+   async function generationNotificationToken(user) {
+      try {
+         const token = await registerForPushNotificationsAsync()
+         if (token) {
+            const data = {
+               token: user.token,
+               id: user.personnel_id,
+               notify_token: token
+            }
+            setNotificationToken(data, (err, res) => {
+               if (err) {
+                  console.log('Error when update user notification token : ', err)
+                  return
+               }
+               if (res)
+                  console.log('User update notification token : ', res)
+            })
+         }
+      } catch (e) {
+         console.log('Error when generate the notify token : ', e)
+      }
    }
 
    return (

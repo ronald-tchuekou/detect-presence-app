@@ -1,32 +1,63 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import SIZES from '../../themes/sizes'
-import { AppStatusBar } from '../../components'
+import { AppStatusBar, ModalLoader } from '../../components'
 import COLORS from '../../themes/colors'
 import { MaterialIcons } from '@expo/vector-icons'
 import STYLES from '../../themes/style'
 import { Agenda } from 'react-native-calendars'
 import moment from 'moment'
 import 'moment/locale/fr'
+import { Context as PlanningContext } from '../../contexts/planningContext'
+import { Context as AuthContext } from '../../contexts/authContext'
 
 moment.locale('fr')
 
 const ProgramCourseScreen = ({ navigation }) => {
+   const loader_ref = React.useRef(null)
 
    const [currentDate, setCurrentDate] = React.useState('2022-05-18')
-   const [calendar_items, setCalendarItems] = React.useState({
-      '2022-05-18': [{ name: 'item 1 - any js object' }],
-      '2022-05-19': [{ name: 'item 2 - any js object' }],
-      '2022-05-20': [],
-      '2022-05-21': [{ name: 'item 3 - any js object' }, { name: 'any js object' }]
-   })
+   const [calendar_items, setCalendarItems] = React.useState({})
+
+   const { fetchPlanning } = React.useContext(PlanningContext)
+   const { state: { currentUser } } = React.useContext(AuthContext)
+
+   React.useEffect(() => {
+      loadItems()
+   }, [])
 
    function close() {
       navigation.pop()
    }
 
    function loadItems() {
-      // TODO
+      loader_ref.current.show()
+      fetchPlanning(currentUser.personnel_id, (error, res) => {
+         loader_ref.current.dismiss()
+         if (error) {
+            console.log(error)
+            return
+         }
+         console.log(res)
+         let result = {}
+         res.forEach(item => {
+            const date = moment(item.date).format('YYYY-MM-DD')
+            const content = result[date]
+            if (content) {
+               result = {
+                  ...result,
+                  [date]: [...result[date], item]
+               }
+            } else {
+               result = {
+                  ...result,
+                  [date]: [item]
+               }
+            }
+         })
+         console.log('Data : ', result)
+         setCalendarItems(result)
+      })
    }
 
    function renderItem(reservation, isFirst) {
@@ -40,7 +71,7 @@ const ProgramCourseScreen = ({ navigation }) => {
             paddingHorizontal: 6,
             paddingVertical: 2,
             borderRadius: 10,
-            backgroundColor: COLORS.SUCCESS,
+            backgroundColor: COLORS.SECOND,
             color: 'white',
             fontSize: 9
          }
@@ -59,11 +90,13 @@ const ProgramCourseScreen = ({ navigation }) => {
                justifyContent: 'space-between',
                alignItems: 'center'
             }}>
-               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>8h00 - 9h00</Text>
-               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>SVT</Text>
-               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>2nd C1</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>
+                  {moment(reservation.begin).format('HH:mm')} - {moment(reservation.end).format('HH:mm')}
+               </Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.matiere}</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.classe_code}</Text>
             </View>
-            <Text style={_styles.badge}>Clôturé</Text>
+            <Text style={_styles.badge}>En cours</Text>
          </TouchableOpacity>
       )
    }
@@ -92,31 +125,14 @@ const ProgramCourseScreen = ({ navigation }) => {
          <View style={{ flex: 1 }}>
             <Agenda
                testID={'agenda'}
-               items={{
-                  '2022-05-18': [
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' }
-                  ],
-                  '2022-05-19': [
-                     { name: 'item 2 - any js object' },
-                     { name: 'item 2 - any js object' },
-                     { name: 'item 2 - any js object' }
-                  ],
-                  '2022-05-20': [],
-                  '2022-05-21': [
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' }
-                  ]
-               }}
-               loadItemsForMonth={loadItems}
-               selected={'2022-05-18'}
+               items={calendar_items}
+               loadItemsForMonth={() => false}
+               selected={moment().format('YYYY-MM-DD')}
                renderItem={renderItem}
+               pastScrollRange={10}
+               futureScrollRange={10}
+               refreshing={false}
+               refreshControl={null}
                renderEmptyDate={renderEmptyDate}
                rowHasChanged={rowHasChanged}
                showClosingKnob={true}
@@ -127,6 +143,9 @@ const ProgramCourseScreen = ({ navigation }) => {
                   indicatorColor: COLORS.PRIMARY
                }}
             />
+         </View>
+         <View style={{ height: 0, width: 0 }}>
+            <ModalLoader ref={loader_ref} />
          </View>
       </AppStatusBar>
    )

@@ -4,10 +4,11 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons'
 import { profile2 } from '../themes/images'
 import COLORS from '../themes/colors'
 import SIZES from '../themes/sizes'
-import { pickImage } from '../utils'
+import { pickImage, ToastMessage } from '../utils'
 import { ProfileModal } from './profile.modal'
 import { Context as AuthContext } from '../contexts/authContext'
 import { ENV } from '../api/env'
+import { ModalLoader } from './loader'
 
 export const HomeHeader = ({ navigation }) => {
    const profile_modal_ref = React.useRef(null)
@@ -76,13 +77,14 @@ export const HomeHeader = ({ navigation }) => {
       setUserImage(currentUserToken, formData, currentUser, (err, res) => {
          loader_ref.current.dismiss()
          if (err) {
+            console.log(err)
             if (err.message)
                ToastAndroid.show(err.message, ToastAndroid.LONG)
             else
-               console.log(err)
+               ToastMessage('Une erreur lors de la mise à jour du profil.')
             return
          }
-         console.log(res)
+         console.log('Response : ', res)
          ToastAndroid.show('Votre image à été ajoutée avec succès !', ToastAndroid.LONG)
       })
    }
@@ -99,9 +101,9 @@ export const HomeHeader = ({ navigation }) => {
                </Pressable>
             </View>
             <View style={styles.image_container}>
-               {currentUser && currentUser.imageURL ? (
+               {currentUser && currentUser.image_profile ? (
                   <Image
-                     source={{ uri: `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.imageURL}` }}
+                     source={{ uri: `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.image_profile}` }}
                      style={{ width: '100%', height: '100%' }}
                      resizeMode={'contain'}
                   />
@@ -133,6 +135,7 @@ export const HomeHeader = ({ navigation }) => {
          <View style={{ height: 0, width: 0, overflow: 'hidden' }}>
             <ProfileModal ref={profile_modal_ref} />
          </View>
+         <ModalLoader ref={loader_ref}/>
       </View>
    )
 }

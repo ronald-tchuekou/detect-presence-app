@@ -5,6 +5,7 @@ import { Alert, Platform, ToastAndroid } from 'react-native'
 import { ENV } from './api/env'
 import COLORS from './themes/colors'
 import API_ROUTES from './api/api_routes'
+import detectPresenceApi from './api/detect-presence-api'
 
 export const storeLocaleValue = async (key, value, callback) => {
    try {
@@ -90,20 +91,15 @@ export const notifyUser = async (title, subtitle, message, data = {}) => {
 export const uploadImage = (formData, userToken, bucket) => {
    return new Promise(async (resolve, reject) => {
       try {
-         const base_url = ENV.base.url + API_ROUTES.GET_FIlES + '/' + bucket
-         const fileResponse = await fetch(base_url, {
-            method: 'post',
-            body: formData,
+         const fileResponse = await detectPresenceApi.post(API_ROUTES.GET_FIlES + '/' + bucket, formData, {
             headers: {
                'x-access-token': userToken,
                'Content-Type': 'multipart/form-data'
             }
          })
-         const fileJson = await fileResponse.json()
-         resolve(fileJson)
+         resolve(fileResponse.data)
       } catch (e) {
-         console.log(e)
-         reject({ message: 'Une erreur est survenu lors de la transmission du fichier.' })
+         reject(e)
       }
    })
 }
