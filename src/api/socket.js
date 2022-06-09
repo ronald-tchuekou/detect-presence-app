@@ -6,4 +6,4 @@
 
 import { io } from 'socket.io-client'
 
-export const socket = io('https://api.bigoodee.com')
+export const socket = io('https://detect-presence.herokuapp.com')

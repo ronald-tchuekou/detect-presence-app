@@ -5,7 +5,7 @@
  */
 
 const API_ROUTES = {
-   SOCKET_URI: 'https://api.bigoodee.com',
+   SOCKET_URI: 'https://detect-presence.herokuapp.com',
    SIGNUP: '/auth/signup',
    SIGNING: '/auth/login',
    VERIFY_USER_EMAIL: '/auth/pass-forgot',

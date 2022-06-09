@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "745273115308",
+    "project_id": "detect-presence",
+    "storage_bucket": "detect-presence.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745273115308:android:ea79bcf58438534c679509",
+        "android_client_info": {
+          "package_name": "com.roncoder.detectpresence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745273115308-luuo72u72gtbde1583prfhne7un5vj2t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roncoder.detectpresence",
+            "certificate_hash": "12a5415288752ae5680da7f66390f580b6e68023"
+          }
+        },
+        {
+          "client_id": "745273115308-9oabal4f57n3l80f56hd027q5pqi7m09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBva7_AhV6pABRJwQDTh1K34t2Tm-n6nww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745273115308-9oabal4f57n3l80f56hd027q5pqi7m09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
