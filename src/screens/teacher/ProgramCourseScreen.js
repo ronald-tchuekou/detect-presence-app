@@ -71,7 +71,7 @@ const ProgramCourseScreen = ({ navigation }) => {
             paddingHorizontal: 6,
             paddingVertical: 2,
             borderRadius: 10,
-            backgroundColor: COLORS.SECOND,
+            backgroundColor: COLORS.WARNING,
             color: 'white',
             fontSize: 9
          }
@@ -91,7 +91,9 @@ const ProgramCourseScreen = ({ navigation }) => {
                alignItems: 'center'
             }}>
                <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>
-                  {moment(reservation.begin).format('HH:mm')} - {moment(reservation.end).format('HH:mm')}
+                  {moment('2022-10-10 ' + reservation.begin)
+                     .format('HH:mm')} - {moment('2022-10-10 ' + reservation.end)
+                  .format('HH:mm')}
                </Text>
                <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.matiere}</Text>
                <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.classe_code}</Text>
