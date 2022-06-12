@@ -18,18 +18,26 @@ const CourseSessionScreen = ({ navigation }) => {
 
    const [planning, setPlanning] = React.useState({})
 
-   const {state: {currentUserToken}} = React.useContext(AuthContext)
-   const {fetchCurrentPlanning} = React.useContext(PlanningContext)
+   const { state: { currentUser } } = React.useContext(AuthContext)
+   const { fetchCurrentPlanning, fetchTauxHoraire } = React.useContext(PlanningContext)
 
    React.useEffect(() => {
       loader_ref.current.show()
-      fetchCurrentPlanning(currentUserToken, (err, res) => {
-         loader_ref.current.dismiss()
-         if(err){
+      fetchCurrentPlanning(currentUser.personnel_id, (err, res) => {
+         if (err) {
+            loader_ref.current.dismiss()
             console.log(err)
             return
          }
-         setPlanning(res)
+         if(res.classe_id)
+         fetchTauxHoraire(res.classe_id, (err_, res_) => {
+            loader_ref.current.dismiss()
+            if (err_) {
+               console.log(err_)
+               return
+            }
+            setPlanning(s => ({...res, taux_horaire: res_.taux}))
+         })
       })
    }, [])
 
@@ -48,14 +56,14 @@ const CourseSessionScreen = ({ navigation }) => {
          <Space />
          <Space />
          {!planning.planning_id ? (
-            <View style={{padding: SIZES.DEFAULT_PADDING, marginVertical: SIZES.LARGE_PADDING}}>
+            <View style={{ padding: SIZES.DEFAULT_PADDING, marginVertical: SIZES.LARGE_PADDING }}>
                <Text style={{
                   fontSize: SIZES.H5,
                   color: COLORS.ERROR,
                   textAlign: 'center'
                }}>Aucune session en cours pour le moment !</Text>
             </View>
-         ):(
+         ) : (
             <View style={{ padding: SIZES.DEFAULT_PADDING }}>
                <View style={styles.line}>
                   <Text style={styles.label}>Classe :</Text>
@@ -63,7 +71,7 @@ const CourseSessionScreen = ({ navigation }) => {
                </View>
                <View style={styles.line}>
                   <Text style={styles.label}>Taux horaire :</Text>
-                  <Text style={styles.value}>{planning.taux_horaire}</Text>
+                  <Text style={styles.value}>{planning.taux_horaire} XFA</Text>
                </View>
                <View style={styles.line}>
                   <Text style={styles.label}>Matière dispensé :</Text>
@@ -72,15 +80,17 @@ const CourseSessionScreen = ({ navigation }) => {
                <View style={styles.line}>
                   <Text style={styles.label}>Date et heure de debut :</Text>
                   <Text style={styles.value}>
-                     {moment(planning.start_date)
-                        .format('YYYY-MM-DD')} à {moment(planning.start_date)
-                     .format('HH:mm')}
+                     {
+                        moment(planning.start_date).format('ddd, DD MMM YYYY')
+                     } à {
+                        moment(planning.start_date).format('HH:mm')
+                     }
                   </Text>
                </View>
             </View>
          )}
-         <View style={{height: 0, width: 0}}>
-            <ModalLoader ref={loader_ref}/>
+         <View style={{ height: 0, width: 0 }}>
+            <ModalLoader ref={loader_ref} />
          </View>
       </AppStatusBar>
    )

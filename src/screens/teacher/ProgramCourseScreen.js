@@ -12,6 +12,7 @@ import { Context as PlanningContext } from '../../contexts/planningContext'
 import { Context as AuthContext } from '../../contexts/authContext'
 
 moment.locale('fr')
+const sortBy = require('lodash.sortby')
 
 const ProgramCourseScreen = ({ navigation }) => {
    const loader_ref = React.useRef(null)
@@ -38,7 +39,6 @@ const ProgramCourseScreen = ({ navigation }) => {
             console.log(error)
             return
          }
-         console.log(res)
          let result = {}
          res.forEach(item => {
             const date = moment(item.date).format('YYYY-MM-DD')
@@ -46,7 +46,7 @@ const ProgramCourseScreen = ({ navigation }) => {
             if (content) {
                result = {
                   ...result,
-                  [date]: [...result[date], item]
+                  [date]: sortBy([...result[date], item], 'begin')
                }
             } else {
                result = {
@@ -55,7 +55,6 @@ const ProgramCourseScreen = ({ navigation }) => {
                }
             }
          })
-         console.log('Data : ', result)
          setCalendarItems(result)
       })
    }

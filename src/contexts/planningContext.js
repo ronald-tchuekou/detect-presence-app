@@ -52,9 +52,27 @@ const fetchCurrentPlanning = (dispatch) => {
    }
 }
 
+const fetchTauxHoraire = (dispatch) => {
+   return async (id, callback) => {
+      try {
+         const route = API_ROUTES.GET_PAID_TAUX + '/classe/' + id
+         const response = await detectPresenceApi.get(route, {
+            header: {
+               'Content-Type': 'application/json',
+            }
+         })
+         callback(undefined, response.data)
+      } catch (e) {
+         if (callback)
+            callback(e.response.data, undefined)
+      }
+   }
+}
+
 export const { Context, Provider } = createDataContext(reducer, {
    fetchPlanning,
-   fetchCurrentPlanning
+   fetchCurrentPlanning,
+   fetchTauxHoraire
 }, {
    planning: []
 })

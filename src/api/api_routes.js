@@ -14,7 +14,8 @@ const API_ROUTES = {
    GET_FIlES: '/files',
    GET_PERSONNEL: '/personnel',
    UPDATE_USER_IMG: '/auth/updateimage',
-   GET_PLANNING: '/planning'
+   GET_PLANNING: '/planning',
+   GET_PAID_TAUX: '/paid-taux'
 }
 
 export default API_ROUTES

@@ -4,7 +4,7 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons'
 import { profile2 } from '../themes/images'
 import COLORS from '../themes/colors'
 import SIZES from '../themes/sizes'
-import { pickImage, ToastMessage } from '../utils'
+import { pickImage, storeLocaleValue, ToastMessage } from '../utils'
 import { ProfileModal } from './profile.modal'
 import { Context as AuthContext } from '../contexts/authContext'
 import { ENV } from '../api/env'
@@ -17,12 +17,18 @@ export const HomeHeader = ({ navigation }) => {
    const {
       state: { currentUser, currentUserToken },
       signOut,
-      setUserImage
+      setUserImage,
+      verifyUserEmail
    } = React.useContext(AuthContext)
 
-   console.log('Current user : ', currentUser)
-
    const full_name = currentUser ? currentUser.firstname + ' ' + currentUser.lastname : ''
+
+   React.useEffect(( ) => {
+      if (currentUser.email)
+         verifyUserEmail(currentUser, async (err, res) => {
+            await storeLocaleValue(ENV.user_key, res)
+         })
+   }, [currentUser])
 
    function openModal() {
       if (profile_modal_ref) {
@@ -50,7 +56,7 @@ export const HomeHeader = ({ navigation }) => {
       )
    }
 
-   async function pickImageToGalerie() {
+   const pickImageToGalerie = React.useCallback(async () => {
       return pickImage((err, res) => {
          if (err) {
             console.log(err)
@@ -59,9 +65,9 @@ export const HomeHeader = ({ navigation }) => {
          if (res)
             saveImage(res)
       })
-   }
+   }, [])
 
-   function saveImage(imagePath) {
+   const saveImage = React.useCallback((imagePath) => {
       const ext = imagePath.uri.split('.').pop()
       const file = {
          uri: imagePath.uri,
@@ -87,7 +93,7 @@ export const HomeHeader = ({ navigation }) => {
          console.log('Response : ', res)
          ToastAndroid.show('Votre image à été ajoutée avec succès !', ToastAndroid.LONG)
       })
-   }
+   }, [])
 
    return (
       <View style={styles.header_container}>
@@ -135,7 +141,7 @@ export const HomeHeader = ({ navigation }) => {
          <View style={{ height: 0, width: 0, overflow: 'hidden' }}>
             <ProfileModal ref={profile_modal_ref} />
          </View>
-         <ModalLoader ref={loader_ref}/>
+         <ModalLoader ref={loader_ref} />
       </View>
    )
 }
