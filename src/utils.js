@@ -31,48 +31,30 @@ export const getLocaleValue = async (key, callback) => {
 
 export const registerForPushNotificationsAsync = async () => {
    try{
-      const { status: existingStatus } = await Notifications.getPermissionsAsync()
-      let finalStatus = existingStatus
-
-      if (existingStatus !== 'granted') {
-         const { status } = await Notifications.requestPermissionsAsync()
-         finalStatus = status
-      }
-
-      if (finalStatus !== 'granted') {
-         alert('Vous ne serez pas notifié sur les activités émises sur cette application.')
-         return
-      }
-
-      const token = (await Notifications.getExpoPushTokenAsync()).data
-
-      if(!token)
-         ToastAndroid.show('Votre téléphone ne peux pas avoir de notification', ToastAndroid.LONG)
+      let token;
+         const { status: existingStatus } = await Notifications.getPermissionsAsync();
+         let finalStatus = existingStatus;
+         if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+         }
+         if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+         }
+         token = (await Notifications.getExpoPushTokenAsync()).data;
+         console.log(token);
 
       if (Platform.OS === 'android') {
-         await Notifications.setNotificationChannelAsync(ENV.notification_channel_id, {
-            name: ENV.notification_channel_id,
-            importance: Notifications.AndroidImportance.HIGH,
-            description: ENV.notification_channel_id,
-            lightColor: COLORS.PRIMARY,
-            lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
-            sound: 'default',
-            showBadge: true,
-            audioAttributes: {
-               usage: Notifications.AndroidAudioUsage.NOTIFICATION,
-               contentType: Notifications.AndroidAudioContentType.MUSIC,
-               flags: {
-                  enforceAudibility: true,
-                  requestHardwareAudioVideoSynchronization: true
-               }
-            },
+         Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],
-            enableLights: true,
-            enableVibrate: true
-         })
+            lightColor: '#2563EB',
+         });
       }
 
-      return token
+      return token;
    }catch(e){
       ToastAndroid.show('Votre téléphone ne peux pas avoir de notification', ToastAndroid.LONG)
       console.log('Error when generate de user token of notification : ', e)
