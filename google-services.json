@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:745273115308:android:ea79bcf58438534c679509",
+        "mobilesdk_app_id": "1:745273115308:android:0e2007d8bfdc6ae5679509",
         "android_client_info": {
           "package_name": "com.roncoder.detectpresence"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "745273115308-6rdjvsv93o7l864kvvl13goahgum9u4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roncoder.detectpresence",
+            "certificate_hash": "eabc3b31a5071c8fdfc85cd67a2b9ac62d9309f1"
+          }
+        },
         {
           "client_id": "745273115308-luuo72u72gtbde1583prfhne7un5vj2t.apps.googleusercontent.com",
           "client_type": 1,
@@ -28,7 +36,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBva7_AhV6pABRJwQDTh1K34t2Tm-n6nww"
+          "current_key": "AIzaSyBFglWdh1XTWh9DBoBWfdDb5cCk8hw6NJ0"
         }
       ],
       "services": {

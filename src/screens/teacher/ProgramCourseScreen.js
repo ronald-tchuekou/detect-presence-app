@@ -71,7 +71,8 @@ const ProgramCourseScreen = ({ navigation }) => {
             paddingHorizontal: 6,
             paddingVertical: 2,
             borderRadius: 10,
-            backgroundColor: COLORS.WARNING,
+            backgroundColor: reservation.status === 'WAITING' ? COLORS.WARNING :
+            reservation.status === 'IN_COURSE' ? COLORS.PRIMARY : COLORS.SUCCESS,
             color: 'white',
             fontSize: 9
          }
@@ -98,7 +99,12 @@ const ProgramCourseScreen = ({ navigation }) => {
                <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.matiere}</Text>
                <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.classe_code}</Text>
             </View>
-            <Text style={_styles.badge}>En cours</Text>
+            <Text style={_styles.badge}>
+               {
+                  reservation.status === 'WAITING' ? 'En attente' :
+                  reservation.status === 'IN_COURSE' ? 'En cours' : 'Complet'
+               }
+            </Text>
          </TouchableOpacity>
       )
    }

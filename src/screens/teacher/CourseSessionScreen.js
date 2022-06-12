@@ -1,16 +1,37 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { AppStatusBar, Space } from '../../components'
+import { AppStatusBar, ModalLoader, Space } from '../../components'
 import COLORS from '../../themes/colors'
 import STYLES from '../../themes/style'
 import { MaterialIcons } from '@expo/vector-icons'
+import { Context as AuthContext } from '../../contexts/authContext'
+import { Context as PlanningContext } from '../../contexts/planningContext'
 import SIZES from '../../themes/sizes'
+import moment from 'moment'
 
 const CourseSessionScreen = ({ navigation }) => {
+   const loader_ref = React.useRef(null)
 
    function close() {
       navigation.pop()
    }
+
+   const [planning, setPlanning] = React.useState({})
+
+   const {state: {currentUserToken}} = React.useContext(AuthContext)
+   const {fetchCurrentPlanning} = React.useContext(PlanningContext)
+
+   React.useEffect(() => {
+      loader_ref.current.show()
+      fetchCurrentPlanning(currentUserToken, (err, res) => {
+         loader_ref.current.dismiss()
+         if(err){
+            console.log(err)
+            return
+         }
+         setPlanning(res)
+      })
+   }, [])
 
    return (
       <AppStatusBar bgColor={COLORS.PRIMARY} barStyle={'light-content'}>
@@ -26,23 +47,40 @@ const CourseSessionScreen = ({ navigation }) => {
          </View>
          <Space />
          <Space />
-         <View style={{ padding: SIZES.DEFAULT_PADDING }}>
-            <View style={styles.line}>
-               <Text style={styles.label}>Classe :</Text>
-               <Text style={styles.value}>Tle C1</Text>
+         {!planning.planning_id ? (
+            <View style={{padding: SIZES.DEFAULT_PADDING, marginVertical: SIZES.LARGE_PADDING}}>
+               <Text style={{
+                  fontSize: SIZES.H5,
+                  color: COLORS.ERROR,
+                  textAlign: 'center'
+               }}>Aucune session en cours pour le moment !</Text>
             </View>
-            <View style={styles.line}>
-               <Text style={styles.label}>Taux horaire :</Text>
-               <Text style={styles.value}>3250 XFA</Text>
+         ):(
+            <View style={{ padding: SIZES.DEFAULT_PADDING }}>
+               <View style={styles.line}>
+                  <Text style={styles.label}>Classe :</Text>
+                  <Text style={styles.value}>{planning.classe}</Text>
+               </View>
+               <View style={styles.line}>
+                  <Text style={styles.label}>Taux horaire :</Text>
+                  <Text style={styles.value}>{planning.taux_horaire}</Text>
+               </View>
+               <View style={styles.line}>
+                  <Text style={styles.label}>Matière dispensé :</Text>
+                  <Text style={styles.value}>{planning.matiere}</Text>
+               </View>
+               <View style={styles.line}>
+                  <Text style={styles.label}>Date et heure de debut :</Text>
+                  <Text style={styles.value}>
+                     {moment(planning.start_date)
+                        .format('YYYY-MM-DD')} à {moment(planning.start_date)
+                     .format('HH:mm')}
+                  </Text>
+               </View>
             </View>
-            <View style={styles.line}>
-               <Text style={styles.label}>Matière dispensé :</Text>
-               <Text style={styles.value}>SVT</Text>
-            </View>
-            <View style={styles.line}>
-               <Text style={styles.label}>Date et heure de debut :</Text>
-               <Text style={styles.value}>Aujourd'hui à 8h00</Text>
-            </View>
+         )}
+         <View style={{height: 0, width: 0}}>
+            <ModalLoader ref={loader_ref}/>
          </View>
       </AppStatusBar>
    )
