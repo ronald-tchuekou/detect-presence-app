@@ -19,7 +19,8 @@ const StartScreen = ({ navigation }) => {
 
    const checkUser = () => {
       return getLocaleValue(ENV.user_key, (error, value) => {
-         if (value) {
+         console.log('CurrentUser : ', currentUser, ', Value : ', value)
+         if (value && value.personnel_id) {
             setUser(value, async () => {
                await generationNotificationToken(value)
                if (value.role === 'Agent')

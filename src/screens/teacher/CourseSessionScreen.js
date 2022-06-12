@@ -38,6 +38,8 @@ const CourseSessionScreen = ({ navigation }) => {
             }
             setPlanning(s => ({...res, taux_horaire: res_.taux}))
          })
+         else
+            loader_ref.current.dismiss()
       })
    }, [])
 

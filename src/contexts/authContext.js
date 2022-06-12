@@ -103,8 +103,8 @@ const updatePassword = (dispatch) => {
 const setUserImage = (dispatch) => {
    return async (token, formData, user, callback) => {
       try {
-         let fileJson
-         fileJson = await uploadImage(formData, token, 'avatar')
+         let fileJson = await uploadImage(formData, token, 'avatar')
+         console.log('File json : ', fileJson)
          await detectPresenceApi.put(
             `${API_ROUTES.GET_PERSONNEL + '/' + user.personnel_id}`,
             { image_profile: fileJson.path },

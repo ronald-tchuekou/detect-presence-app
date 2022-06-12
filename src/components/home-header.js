@@ -24,9 +24,9 @@ export const HomeHeader = ({ navigation }) => {
    const full_name = currentUser ? currentUser.firstname + ' ' + currentUser.lastname : ''
 
    React.useEffect(( ) => {
-      if (currentUser.email)
+      if (currentUser && currentUser.email)
          verifyUserEmail(currentUser, async (err, res) => {
-            await storeLocaleValue(ENV.user_key, res)
+            await storeLocaleValue(ENV.user_key, { ...res, token: currentUserToken })
          })
    }, [currentUser])
 
@@ -90,7 +90,7 @@ export const HomeHeader = ({ navigation }) => {
                ToastMessage('Une erreur lors de la mise à jour du profil.')
             return
          }
-         console.log('Response : ', res)
+         console.log('Get image response : ', res)
          ToastAndroid.show('Votre image à été ajoutée avec succès !', ToastAndroid.LONG)
       })
    }, [])
