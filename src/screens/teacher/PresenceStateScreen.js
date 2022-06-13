@@ -1,33 +1,64 @@
 import React from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import SIZES from '../../themes/sizes'
-import { AppStatusBar } from '../../components'
+import { AppStatusBar, ModalLoader } from '../../components'
 import COLORS from '../../themes/colors'
 import STYLES from '../../themes/style'
 import { MaterialIcons } from '@expo/vector-icons'
 import moment from 'moment'
 import { Agenda } from 'react-native-calendars'
+import { Context as PlanningContext } from '../../contexts/planningContext'
+import { Context as AuthContext } from '../../contexts/authContext'
+import sortBy from 'lodash.sortby'
 
 const PresenceStateScreen = ({ navigation }) => {
+   const loader_ref = React.useRef(null)
 
-   const [currentDate, setCurrentDate] = React.useState('2022-05-18')
-   const [calendar_items, setCalendarItems] = React.useState({
-      '2022-05-18': [{ name: 'item 1 - any js object' }],
-      '2022-05-19': [{ name: 'item 2 - any js object' }],
-      '2022-05-20': [],
-      '2022-05-21': [{ name: 'item 3 - any js object' }, { name: 'any js object' }]
-   })
+   const [currentDate, setCurrentDate] = React.useState(new Date().toString())
+   const [calendar_items, setCalendarItems] = React.useState({})
 
-   function close() {
-      navigation.pop()
-   }
+   const { fetchPlanning } = React.useContext(PlanningContext)
+   const { state: { currentUser } } = React.useContext(AuthContext)
 
-   function loadItems() {
-      // TODO
-   }
+   React.useEffect(() => {
+      loadItems()
+   }, [])
 
-   function renderItem(reservation, isFirst) {
+   const close = React.useCallback(() => navigation.pop(), [])
+
+   const loadItems = React.useCallback(() => {
+      loader_ref.current.show()
+      fetchPlanning(currentUser.personnel_id, (error, res) => {
+         loader_ref.current.dismiss()
+         if (error) {
+            console.log(error)
+            return
+         }
+         let result = {}
+         res.forEach(item => {
+            const date = moment(item.date).format('YYYY-MM-DD')
+            const content = result[date]
+            if (content) {
+               result = {
+                  ...result,
+                  [date]: sortBy([...result[date], item], 'begin')
+               }
+            } else {
+               result = {
+                  ...result,
+                  [date]: [item]
+               }
+            }
+         })
+         setCalendarItems(result)
+      })
+   }, [])
+
+   const renderItem = React.useCallback((reservation, isFirst) => {
       const marginTop = isFirst ? SIZES.DEFAULT_MARGIN : 0
+
+      const isLet = () => moment(moment(reservation.date).format('YYYY-MM-DD'))
+         .isBefore(moment(moment().format('YYYY-MM-DD')))
 
       const _styles = StyleSheet.create({
          badge: {
@@ -37,7 +68,9 @@ const PresenceStateScreen = ({ navigation }) => {
             paddingHorizontal: 6,
             paddingVertical: 2,
             borderRadius: 10,
-            backgroundColor: COLORS.SUCCESS,
+            backgroundColor: reservation.status === 'WAITING' ? (
+               isLet() ? COLORS.ERROR : COLORS.WARNING
+            ) : reservation.status === 'IN_COURSE' ? COLORS.PRIMARY : COLORS.SUCCESS,
             color: 'white',
             fontSize: 9
          }
@@ -56,14 +89,21 @@ const PresenceStateScreen = ({ navigation }) => {
                justifyContent: 'space-between',
                alignItems: 'center'
             }}>
-               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>8h00 - 9h00</Text>
-               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>SVT</Text>
-               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>2nd C1</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>
+                  {moment('2022-10-10 ' + reservation.begin)
+                     .format('HH:mm')} - {moment('2022-10-10 ' + reservation.end)
+                  .format('HH:mm')}
+               </Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.matiere}</Text>
+               <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.classe_code}</Text>
             </View>
-            <Text style={_styles.badge}>Présent</Text>
+            <Text style={_styles.badge}>
+               {reservation.status === 'WAITING' ? (isLet() ? 'Absent' : 'En attente') :
+                  reservation.status === 'IN_COURSE' ? 'En cours' : 'Complet'}
+            </Text>
          </TouchableOpacity>
       )
-   }
+   }, [])
 
    function renderEmptyDate() {
       return null
@@ -83,37 +123,21 @@ const PresenceStateScreen = ({ navigation }) => {
                   <MaterialIcons name='arrow-back-ios' size={30} color={COLORS.DARK_500} />
                </Pressable>
             </View>
-            <Text style={STYLES.title} numberOfLines={1}>Etat de présences</Text>
+            <Text style={STYLES.title} numberOfLines={1}>Etat de présence</Text>
          </View>
          <Text style={styles.header_title}>{moment(currentDate).format('MMMM YYYY')}</Text>
          <View style={{ flex: 1 }}>
             <Agenda
                testID={'agenda'}
-               items={{
-                  '2022-05-18': [
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' }
-                  ],
-                  '2022-05-19': [
-                     { name: 'item 2 - any js object' },
-                     { name: 'item 2 - any js object' },
-                     { name: 'item 2 - any js object' }
-                  ],
-                  '2022-05-20': [],
-                  '2022-05-21': [
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' },
-                     { name: 'item 1 - any js object' }
-                  ]
-               }}
-               loadItemsForMonth={loadItems}
-               selected={'2022-05-18'}
+               items={calendar_items}
+               loadItemsForMonth={() => false}
+               selected={moment().format('YYYY-MM-DD')}
+               onDayPress={(date) => setCurrentDate(date.dateString)}
                renderItem={renderItem}
+               pastScrollRange={10}
+               futureScrollRange={10}
+               refreshing={false}
+               refreshControl={null}
                renderEmptyDate={renderEmptyDate}
                rowHasChanged={rowHasChanged}
                showClosingKnob={true}
@@ -124,6 +148,9 @@ const PresenceStateScreen = ({ navigation }) => {
                   indicatorColor: COLORS.PRIMARY
                }}
             />
+         </View>
+         <View style={{ height: 0, width: 0 }}>
+            <ModalLoader ref={loader_ref} />
          </View>
       </AppStatusBar>
    )

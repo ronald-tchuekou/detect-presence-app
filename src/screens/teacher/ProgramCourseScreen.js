@@ -17,7 +17,7 @@ const sortBy = require('lodash.sortby')
 const ProgramCourseScreen = ({ navigation }) => {
    const loader_ref = React.useRef(null)
 
-   const [currentDate, setCurrentDate] = React.useState('2022-05-18')
+   const [currentDate, setCurrentDate] = React.useState(new Date().toString())
    const [calendar_items, setCalendarItems] = React.useState({})
 
    const { fetchPlanning } = React.useContext(PlanningContext)
@@ -62,6 +62,9 @@ const ProgramCourseScreen = ({ navigation }) => {
    function renderItem(reservation, isFirst) {
       const marginTop = isFirst ? SIZES.DEFAULT_MARGIN : 0
 
+      const isLet = () => moment(moment(reservation.date).format('YYYY-MM-DD'))
+         .isBefore(moment(moment().format('YYYY-MM-DD')))
+
       const _styles = StyleSheet.create({
          badge: {
             position: 'absolute',
@@ -70,8 +73,9 @@ const ProgramCourseScreen = ({ navigation }) => {
             paddingHorizontal: 6,
             paddingVertical: 2,
             borderRadius: 10,
-            backgroundColor: reservation.status === 'WAITING' ? COLORS.WARNING :
-            reservation.status === 'IN_COURSE' ? COLORS.PRIMARY : COLORS.SUCCESS,
+            backgroundColor: reservation.status === 'WAITING' ? (
+               isLet() ? COLORS.ERROR : COLORS.WARNING
+            ) : reservation.status === 'IN_COURSE' ? COLORS.PRIMARY : COLORS.SUCCESS,
             color: 'white',
             fontSize: 9
          }
@@ -99,10 +103,8 @@ const ProgramCourseScreen = ({ navigation }) => {
                <Text style={{ fontSize: 13, color: COLORS.DARK_500 }}>{reservation.classe_code}</Text>
             </View>
             <Text style={_styles.badge}>
-               {
-                  reservation.status === 'WAITING' ? 'En attente' :
-                  reservation.status === 'IN_COURSE' ? 'En cours' : 'Complet'
-               }
+               {reservation.status === 'WAITING' ? (isLet() ? 'Absent' : 'En attente') :
+                  reservation.status === 'IN_COURSE' ? 'En cours' : 'Complet'}
             </Text>
          </TouchableOpacity>
       )
@@ -136,6 +138,7 @@ const ProgramCourseScreen = ({ navigation }) => {
                loadItemsForMonth={() => false}
                selected={moment().format('YYYY-MM-DD')}
                renderItem={renderItem}
+               onDayPress={(date) => setCurrentDate(date.dateString)}
                pastScrollRange={10}
                futureScrollRange={10}
                refreshing={false}

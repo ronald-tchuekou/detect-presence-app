@@ -23,7 +23,7 @@ export const HomeHeader = ({ navigation }) => {
 
    const full_name = currentUser ? currentUser.firstname + ' ' + currentUser.lastname : ''
 
-   React.useEffect(( ) => {
+   React.useEffect(() => {
       if (currentUser && currentUser.email)
          verifyUserEmail(currentUser, async (err, res) => {
             await storeLocaleValue(ENV.user_key, { ...res, token: currentUserToken })
@@ -95,6 +95,12 @@ export const HomeHeader = ({ navigation }) => {
       })
    }, [])
 
+   const getImagePath = React.useCallback(() => {
+      const p = `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.image_profile}`
+      ToastMessage('Image path : ' + p)
+      return p
+   }, [currentUser])
+
    return (
       <View style={styles.header_container}>
          <View style={styles.header_background} />
@@ -109,7 +115,7 @@ export const HomeHeader = ({ navigation }) => {
             <View style={styles.image_container}>
                {currentUser && currentUser.image_profile ? (
                   <Image
-                     source={{ uri: `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.image_profile}` }}
+                     source={{ uri: getImagePath() }}
                      style={{ width: '100%', height: '100%' }}
                      resizeMode={'contain'}
                   />

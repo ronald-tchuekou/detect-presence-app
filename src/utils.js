@@ -42,7 +42,9 @@ export const registerForPushNotificationsAsync = async () => {
             alert('Failed to get push token for push notification!');
             return;
          }
-         token = (await Notifications.getExpoPushTokenAsync()).data;
+         token = (await Notifications.getExpoPushTokenAsync({
+            experienceId: '@ronald-tchuekou/detect-presence',
+         })).data;
          console.log(token);
 
       if (Platform.OS === 'android') {
@@ -56,7 +58,7 @@ export const registerForPushNotificationsAsync = async () => {
 
       return token;
    }catch(e){
-      ToastAndroid.show('Votre téléphone ne peux pas avoir de notification', ToastAndroid.LONG)
+      ToastAndroid.show('Votre téléphone ne peux pas avoir de notification ===> ' + e.message, ToastAndroid.LONG)
       console.log('Error when generate de user token of notification : ', e)
       return null
    }
