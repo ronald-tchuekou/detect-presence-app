@@ -4,7 +4,7 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons'
 import { profile2 } from '../themes/images'
 import COLORS from '../themes/colors'
 import SIZES from '../themes/sizes'
-import { pickImage, storeLocaleValue, ToastMessage } from '../utils'
+import { pickImage, registerForPushNotificationsAsync, storeLocaleValue, ToastMessage } from '../utils'
 import { ProfileModal } from './profile.modal'
 import { Context as AuthContext } from '../contexts/authContext'
 import { ENV } from '../api/env'
@@ -18,16 +18,20 @@ export const HomeHeader = ({ navigation }) => {
       state: { currentUser, currentUserToken },
       signOut,
       setUserImage,
-      verifyUserEmail
+      verifyUserEmail,
+      setNotificationToken
    } = React.useContext(AuthContext)
 
    const full_name = currentUser ? currentUser.firstname + ' ' + currentUser.lastname : ''
 
    React.useEffect(() => {
-      if (currentUser && currentUser.email)
+      if (currentUser && currentUser.email) {
+         generationNotificationToken(currentUser).then(() => {
+         })
          verifyUserEmail(currentUser, async (err, res) => {
             await storeLocaleValue(ENV.user_key, { ...res, token: currentUserToken })
          })
+      }
    }, [currentUser])
 
    function openModal() {
@@ -54,6 +58,29 @@ export const HomeHeader = ({ navigation }) => {
             }
          ]
       )
+   }
+
+   async function generationNotificationToken(user) {
+      try {
+         const token = await registerForPushNotificationsAsync()
+         if (token) {
+            const data = {
+               token: user.token,
+               id: user.personnel_id,
+               notify_token: token
+            }
+            setNotificationToken(data, (err, res) => {
+               if (err) {
+                  console.log('Error when update user notification token : ', err)
+                  return
+               }
+               if (res)
+                  console.log('User update notification token : ', res)
+            })
+         }
+      } catch (e) {
+         console.log('Error when generate the notify token : ', e)
+      }
    }
 
    const pickImageToGalerie = React.useCallback(async () => {
@@ -95,11 +122,10 @@ export const HomeHeader = ({ navigation }) => {
       })
    }, [])
 
-   const getImagePath = React.useCallback(() => {
-      const p = `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.image_profile}`
-      ToastMessage('Image path : ' + p)
-      return p
-   }, [currentUser])
+   const getImagePath = React.useCallback(() =>
+         `${ENV.base.url}/files?bucket=avatars&filename=${currentUser.image_profile}`
+      , [currentUser]
+   )
 
    return (
       <View style={styles.header_container}>
@@ -116,6 +142,10 @@ export const HomeHeader = ({ navigation }) => {
                {currentUser && currentUser.image_profile ? (
                   <Image
                      source={{ uri: getImagePath() }}
+                     onError={(error) => {
+                        console.log(error)
+                        ToastMessage('Votre image de profile ne peux pas s\'afficher ! ' + error.type)
+                     }}
                      style={{ width: '100%', height: '100%' }}
                      resizeMode={'contain'}
                   />

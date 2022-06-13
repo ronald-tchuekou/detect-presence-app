@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
    const loader_ref = React.useRef(null)
 
    const {
-      state: { formData, currentUser, currentUserToken },
+      state: { formData },
       setFormDataField,
       signIn,
       setNotificationToken

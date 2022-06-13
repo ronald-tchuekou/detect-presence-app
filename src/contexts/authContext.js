@@ -53,7 +53,6 @@ const signOut = (dispatch) => {
 }
 
 const verifyUserEmail = (dispatch) => {
-   console.log(dispatch)
    return async (data, callback) => {
       try {
          const user = await detectPresenceApi.get(API_ROUTES.VERIFY_USER_EMAIL + '/' + data.email)
@@ -82,7 +81,6 @@ const resetUserPassword = (dispatch) => {
 }
 
 const updatePassword = (dispatch) => {
-   console.log(dispatch)
    return async (data, callback) => {
       try {
          const response = await detectPresenceApi.put(API_ROUTES.UPDATE_PASS, data, {

@@ -1,15 +1,13 @@
 import React from 'react'
 import { Context as AuthContext } from '../../contexts/authContext'
-import { getLocaleValue, registerForPushNotificationsAsync } from '../../utils'
+import { getLocaleValue } from '../../utils'
 import { ENV } from '../../api/env'
 import { Image, View } from 'react-native'
 import { splash_screen } from '../../themes/images'
 
 const StartScreen = ({ navigation }) => {
    const {
-      state: {currentUserToken, currentUser},
-      setUser,
-      setNotificationToken
+      setUser
    } = React.useContext(AuthContext)
 
    React.useEffect(() => {
@@ -19,10 +17,8 @@ const StartScreen = ({ navigation }) => {
 
    const checkUser = () => {
       return getLocaleValue(ENV.user_key, (error, value) => {
-         console.log('CurrentUser : ', currentUser, ', Value : ', value)
          if (value && value.personnel_id) {
             setUser(value, async () => {
-               await generationNotificationToken(value)
                if (value.role === 'Agent')
                   navigation.navigate('PersonnelFlow')
                else if (value.role === 'Enseignant')
@@ -32,30 +28,6 @@ const StartScreen = ({ navigation }) => {
             navigation.navigate('AuthFlow')
          }
       })
-   }
-
-   async function generationNotificationToken(user) {
-      try {
-         const token = await registerForPushNotificationsAsync()
-         console.log('User token : ', token)
-         if (token) {
-            const data = {
-               token: user.token,
-               id: user.personnel_id,
-               notify_token: token
-            }
-            setNotificationToken(data, (err, res) => {
-               if (err) {
-                  console.log('Error when update user notification token : ', err)
-                  return
-               }
-               if (res)
-                  console.log('User update notification token : ', res)
-            })
-         }
-      } catch (e) {
-         console.log('Error when generate the notify token : ', e)
-      }
    }
 
    return (
